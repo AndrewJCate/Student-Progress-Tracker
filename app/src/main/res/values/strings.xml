@@ -5,4 +5,7 @@
     <string name="button_text_terms">terms</string>
     <string name="button_text_courses">courses</string>
     <string name="button_text_assessments">assessments</string>
+    <string name="add_term">add new term</string>
+    <string name="add_course">add new course</string>
+    <string name="add_assessment">add new assessment</string>
 </resources>

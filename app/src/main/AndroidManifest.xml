@@ -13,28 +13,55 @@
         android:theme="@style/Theme.StudentProgressTracker"
         tools:targetApi="33">
         <activity
-            android:name=".ui.AssessmentList"
+            android:name=".ui.AssessmentDetail"
             android:exported="false"
-            android:label="Assessments"
+            android:label="Assessment Details"
+            android:parentActivityName=".ui.AssessmentsList">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.CourseDetail"
+            android:exported="false"
+            android:label="Course Details"
+            android:parentActivityName=".ui.CoursesList">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.TermDetail"
+            android:exported="false"
+            android:label="Term Details"
+            android:parentActivityName=".ui.TermsList">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.AssessmentsList"
+            android:exported="false"
+            android:label="Assessments List"
             android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.CourseList"
+            android:name=".ui.CoursesList"
             android:exported="false"
-            android:label="Courses"
+            android:label="Courses List"
             android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.TermList"
-            android:label="Terms"
-            android:parentActivityName=".ui.MainActivity"
-            android:exported="false">
+            android:name=".ui.TermsList"
+            android:exported="false"
+            android:label="Terms List"
+            android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

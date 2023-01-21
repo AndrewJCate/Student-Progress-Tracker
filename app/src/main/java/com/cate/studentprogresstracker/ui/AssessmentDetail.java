@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import com.cate.studentprogresstracker.R;
 
-public class TermList extends AppCompatActivity {
+public class AssessmentDetail extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_term_list);
+        setContentView(R.layout.activity_assessment_detail);
     }
 }
