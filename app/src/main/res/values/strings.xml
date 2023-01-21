@@ -8,4 +8,5 @@
     <string name="add_term">add new term</string>
     <string name="add_course">add new course</string>
     <string name="add_assessment">add new assessment</string>
+    <string name="add_sample_data">Add Sample Data</string>
 </resources>

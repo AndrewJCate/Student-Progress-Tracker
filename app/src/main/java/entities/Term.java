@@ -14,7 +14,7 @@ public class Term {
     private String termStartDate;   // mm-dd-yyyy
     private String termEndDate;     // mm-dd-yyyy
 
-    public Term(int termId, String termTitle, String termStartDate, String termEndDate, ArrayList<Course> termCourses) {
+    public Term(int termId, String termTitle, String termStartDate, String termEndDate) {
         this.termId        = termId;
         this.termTitle     = termTitle;
         this.termStartDate = termStartDate;
