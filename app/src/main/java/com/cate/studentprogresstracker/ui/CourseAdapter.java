@@ -39,11 +39,18 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
     public void onBindViewHolder(@NonNull CourseAdapter.CourseViewHolder holder, int position) {
         if (mCourses != null) {
             Course currentCourse = mCourses.get(position);
-            String title = currentCourse.getCourseTitle();
+            String title         = currentCourse.getCourseTitle();
+            String startDate     = currentCourse.getCourseStartDate();
+            String endDate       = currentCourse.getCourseEndDate();
+
             holder.courseItemView.setText(title);
+            holder.courseItemStartDate.setText(startDate);
+            holder.courseItemEndDate.setText(endDate);
         }
         else {
             holder.courseItemView.setText(R.string.no_course_name);
+            holder.courseItemStartDate.setText(R.string.no_start_date);
+            holder.courseItemEndDate.setText(R.string.no_end_date);
         }
     }
 
@@ -59,11 +66,17 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
     class CourseViewHolder extends RecyclerView.ViewHolder {
 
+        private final TextView courseItemEndDate;
+        private final TextView courseItemStartDate;
         private final TextView courseItemView;
 
         private CourseViewHolder(View itemView) {
             super(itemView);
-            courseItemView = itemView.findViewById(R.id.courseItem1);
+
+            courseItemView      = itemView.findViewById(R.id.courseItemTitle);
+            courseItemStartDate = itemView.findViewById(R.id.courseItemStartDate);
+            courseItemEndDate   = itemView.findViewById(R.id.courseItemEndDate);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -71,6 +84,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                     final Course currentCourse = mCourses.get(position);
 
                     Intent intent = new Intent(context, CourseDetails.class);
+                    intent.putExtra("id", currentCourse.getCourseId());
                     intent.putExtra("title", currentCourse.getCourseTitle());
                     intent.putExtra("startDate", currentCourse.getCourseStartDate());
                     intent.putExtra("endDate", currentCourse.getCourseEndDate());
@@ -80,6 +94,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                     intent.putExtra("instructorPhoneNumber", currentCourse.getCourseInstructorPhoneNumber());
                     intent.putExtra("instructorEmail", currentCourse.getCourseInstructorEmail());
                     intent.putExtra("note", currentCourse.getCourseNote());
+                    intent.putExtra("termId", currentCourse.getTermId());
 
                     context.startActivity(intent);
                 }

@@ -11,6 +11,8 @@
     <string name="add_sample_data">Add Sample Data</string>
     <string name="no_term_name">No term name</string>
     <string name="no_course_name">No course name</string>
+    <string name="no_start_date">No course name</string>
+    <string name="no_end_date">No course name</string>
     <string name="no_assessment_name">No assessment name</string>
     <string name="textview">TextView</string>
     <string name="save">Save</string>
