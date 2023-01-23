@@ -13,34 +13,34 @@
         android:theme="@style/Theme.StudentProgressTracker"
         tools:targetApi="33">
         <activity
-            android:name=".ui.AssessmentDetail"
+            android:name=".ui.AssessmentDetails"
             android:exported="false"
             android:label="Assessment Details"
-            android:parentActivityName=".ui.AssessmentsList">
+            android:parentActivityName=".ui.AssessmentList">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.CourseDetail"
+            android:name=".ui.CourseDetails"
             android:exported="false"
             android:label="Course Details"
-            android:parentActivityName=".ui.CoursesList">
+            android:parentActivityName=".ui.CourseList">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.TermDetail"
+            android:name=".ui.TermDetails"
             android:exported="false"
             android:label="Term Details"
-            android:parentActivityName=".ui.TermsList">
+            android:parentActivityName=".ui.TermList">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.AssessmentsList"
+            android:name=".ui.AssessmentList"
             android:exported="false"
             android:label="Assessments List"
             android:parentActivityName=".ui.MainActivity">
@@ -49,7 +49,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.CoursesList"
+            android:name=".ui.CourseList"
             android:exported="false"
             android:label="Courses List"
             android:parentActivityName=".ui.MainActivity">
@@ -58,7 +58,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.TermsList"
+            android:name=".ui.TermList"
             android:exported="false"
             android:label="Terms List"
             android:parentActivityName=".ui.MainActivity">

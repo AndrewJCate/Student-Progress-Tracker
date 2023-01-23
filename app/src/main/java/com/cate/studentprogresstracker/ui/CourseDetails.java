@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import com.cate.studentprogresstracker.R;
 
-public class AssessmentDetail extends AppCompatActivity {
+public class CourseDetails extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_assessment_detail);
+        setContentView(R.layout.activity_course_details);
     }
 }

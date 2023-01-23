@@ -18,31 +18,6 @@ import entities.Term;
 
 public class TermAdapter extends RecyclerView.Adapter<TermAdapter.TermViewHolder> {
 
-    public class TermViewHolder extends RecyclerView.ViewHolder {
-
-        private final TextView termItemView;
-
-        private TermViewHolder(View itemView) {
-            super(itemView);
-            termItemView = itemView.findViewById(R.id.termItem1);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    final Term currentTerm = mTerms.get(position);
-
-                    Intent intent = new Intent(context, TermDetail.class);
-                    intent.putExtra("id", currentTerm.getTermId());
-                    intent.putExtra("title", currentTerm.getTermTitle());
-                    intent.putExtra("startDate", currentTerm.getTermStartDate());
-                    intent.putExtra("endDate", currentTerm.getTermEndDate());
-
-                    context.startActivity(intent);
-                }
-            });
-        }
-    }
-
     private final Context context;
     private final LayoutInflater mInflater;
 
@@ -68,7 +43,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.TermViewHolder
             holder.termItemView.setText(title);
         }
         else {
-            holder.termItemView.setText("No term name.");
+            holder.termItemView.setText(R.string.no_term_name);
         }
     }
 
@@ -82,4 +57,28 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.TermViewHolder
         notifyDataSetChanged();
     }
 
+    class TermViewHolder extends RecyclerView.ViewHolder {
+
+        private final TextView termItemView;
+
+        private TermViewHolder(View itemView) {
+            super(itemView);
+            termItemView = itemView.findViewById(R.id.termItem1);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    final Term currentTerm = mTerms.get(position);
+
+                    Intent intent = new Intent(context, TermDetails.class);
+                    intent.putExtra("id", currentTerm.getTermId());
+                    intent.putExtra("title", currentTerm.getTermTitle());
+                    intent.putExtra("startDate", currentTerm.getTermStartDate());
+                    intent.putExtra("endDate", currentTerm.getTermEndDate());
+
+                    context.startActivity(intent);
+                }
+            });
+        }
+    }
 }
