@@ -17,14 +17,15 @@ import database.Repository;
 import entities.Term;
 
 public class TermList extends AppCompatActivity {
+    private Repository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final TermAdapter    termAdapter;
+
         FloatingActionButton fab;
-        List<Term> allTerms;
-        RecyclerView recyclerView;
-        Repository repository;
-        TermAdapter termAdapter;
+        List<Term>           allTerms;
+        RecyclerView         recyclerView;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term_list);
@@ -45,5 +46,23 @@ public class TermList extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        final TermAdapter termAdapter;
+
+        List<Term> allTerms;
+        RecyclerView recyclerView;
+
+        super.onResume();
+
+        allTerms     = repository.getAllTerms();
+        recyclerView = findViewById(R.id.termRecyclerView);
+        termAdapter  = new TermAdapter(this );
+
+        recyclerView.setAdapter(termAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        termAdapter.setTerms(allTerms);
     }
 }

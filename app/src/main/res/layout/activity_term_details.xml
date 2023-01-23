@@ -36,7 +36,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="1st Semester" />
+                    android:hint="<title>" />
             </LinearLayout>
 
             <LinearLayout
@@ -56,7 +56,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="01-01-2023" />
+                    android:hint="<MM-DD-YYYY>" />
             </LinearLayout>
 
             <LinearLayout
@@ -76,7 +76,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="06-30-2023" />
+                    android:hint="<MM-DD-YYYY>" />
             </LinearLayout>
 
             <Button
