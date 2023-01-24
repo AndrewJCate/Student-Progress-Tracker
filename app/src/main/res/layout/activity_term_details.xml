@@ -39,6 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_weight="1"
+                    android:layout_marginStart="51dp"
                     android:hint="Course title" />
             </LinearLayout>
 
@@ -60,6 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_weight="1"
+                    android:layout_marginStart="10dp"
                     android:hint="MM-DD-YYYY" />
             </LinearLayout>
 
@@ -81,6 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_weight="1"
+                    android:layout_marginStart="18dp"
                     android:hint="MM-DD-YYYY" />
 
             </LinearLayout>
@@ -89,6 +92,7 @@
                 android:id="@+id/termSaveDetailsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/save" />
 
             <TextView
@@ -97,7 +101,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:text="Courses:"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
 
