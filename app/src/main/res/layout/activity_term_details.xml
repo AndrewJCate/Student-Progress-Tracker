@@ -31,14 +31,15 @@
                     android:id="@+id/termTitleLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Term Title:" />
+                    android:text="Course Title:"
+                    android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/termEditTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
-                    android:hint="title" />
+                    android:hint="Course title" />
             </LinearLayout>
 
             <LinearLayout
@@ -51,12 +52,13 @@
                     android:id="@+id/termStartDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Term Start Date:" />
+                    android:text="Course Start Date:"
+                    android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/termEditStartDate"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
                     android:hint="MM-DD-YYYY" />
             </LinearLayout>
@@ -71,12 +73,13 @@
                     android:id="@+id/termEndDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Term End Date:" />
+                    android:text="Course End Date:"
+                    android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/termEditEndDate"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
                     android:hint="MM-DD-YYYY" />
 
@@ -85,7 +88,7 @@
             <Button
                 android:id="@+id/termSaveDetailsButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:text="@string/save" />
 
             <TextView
