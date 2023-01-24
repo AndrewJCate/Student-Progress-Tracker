@@ -48,9 +48,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             holder.courseItemEndDate.setText(endDate);
         }
         else {
-            holder.courseItemView.setText(R.string.no_course_name);
-            holder.courseItemStartDate.setText(R.string.no_start_date);
-            holder.courseItemEndDate.setText(R.string.no_end_date);
+            holder.courseItemView.setText(R.string.no_data);
+            holder.courseItemStartDate.setText(R.string.no_data);
+            holder.courseItemEndDate.setText(R.string.no_data);
         }
     }
 

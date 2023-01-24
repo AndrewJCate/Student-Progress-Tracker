@@ -40,11 +40,20 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
         if (mAssessments != null) {
             Assessment currentAssessment = mAssessments.get(position);
             String title = currentAssessment.getAssessmentTitle();
+            String type = currentAssessment.getAssessmentType();
+            String startDate = currentAssessment.getAssessmentStartDate();
+            String endDate = currentAssessment.getAssessmentEndDate();
 
             holder.assessmentItemView.setText(title);
+            holder.assessmentItemType.setText(type);
+            holder.assessmentItemStartDate.setText(startDate);
+            holder.assessmentItemEndDate.setText(endDate);
         }
         else {
-            holder.assessmentItemView.setText(R.string.no_assessment_name);
+            holder.assessmentItemView.setText(R.string.no_data);
+            holder.assessmentItemType.setText(R.string.no_data);
+            holder.assessmentItemStartDate.setText(R.string.no_data);
+            holder.assessmentItemEndDate.setText(R.string.no_data);
         }
     }
 

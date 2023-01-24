@@ -43,7 +43,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.TermViewHolder
             holder.termItemView.setText(title);
         }
         else {
-            holder.termItemView.setText(R.string.no_term_name);
+            holder.termItemView.setText(R.string.no_data);
         }
     }
 
