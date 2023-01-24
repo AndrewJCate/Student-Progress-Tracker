@@ -22,12 +22,12 @@ import entities.Term;
 
 public class TermDetails extends AppCompatActivity {
 
-    private EditText     editEndDate;
-    private EditText     editStartDate;
-    private EditText     editTitle;
-    private int          id;
-    private Repository   repository;
-    private Term         term;
+    private EditText   editEndDate;
+    private EditText   editStartDate;
+    private EditText   editTitle;
+    private int        id;
+    private Repository repository;
+    private Term       term;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +42,12 @@ public class TermDetails extends AppCompatActivity {
         editTitle     = findViewById(R.id.termEditTitle);
         editStartDate = findViewById(R.id.termEditStartDate);
         editEndDate   = findViewById(R.id.termEditEndDate);
+
         id            = getIntent().getIntExtra("id", -1);
         title         = getIntent().getStringExtra("title");
         startDate     = getIntent().getStringExtra("startDate");
         endDate       = getIntent().getStringExtra("endDate");
+
         repository    = new Repository(getApplication());
         recyclerView  = findViewById(R.id.term_courseRecyclerView);
         final CourseAdapter courseAdapter = new CourseAdapter(this);
@@ -73,11 +75,21 @@ public class TermDetails extends AppCompatActivity {
 
                 // Create new Term object
                 if (id == -1) {
-                    term = new Term(0, editTitle.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString());
+                    term = new Term(
+                            0,
+                            editTitle.getText().toString(),
+                            editStartDate.getText().toString(),
+                            editEndDate.getText().toString()
+                    );
                     repository.insert(term);
                 }
                 else {  // Update existing Term object data
-                    term = new Term(id, editTitle.getText().toString(), editStartDate.getText().toString(), editEndDate.getText().toString());
+                    term = new Term(
+                            id,
+                            editTitle.getText().toString(),
+                            editStartDate.getText().toString(),
+                            editEndDate.getText().toString()
+                    );
                     repository.update(term);
                 }
             }
