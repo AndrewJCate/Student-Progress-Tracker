@@ -21,28 +21,29 @@ import entities.Term;
 
 public class CourseDetails extends AppCompatActivity {
 
+    private EditText   editTitle;
     private EditText   editEndDate;
     private EditText   editStartDate;
-    private EditText   editTitle;
     private EditText   editStatus;
     private EditText   editInstructorFirstName;
     private EditText   editInstructorLastName;
     private EditText   editInstructorEmail;
     private EditText   editInstructorPhone;
-    private EditText editNote;
+    private EditText   editNote;
     private int        id;
     private Repository repository;
-    private Course course;
+    private Course     course;
+    private int termId; // TODO need to implement
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_details);
 
-        String       endDate;
         RecyclerView recyclerView;
-        String       startDate;
         String       title;
+        String       startDate;
+        String       endDate;
         String       status;
         String       instructorFirstName;
         String       instructorLastName;
@@ -70,8 +71,7 @@ public class CourseDetails extends AppCompatActivity {
         instructorPhone     = getIntent().getStringExtra("instructorPhoneNumber");
         instructorEmail     = getIntent().getStringExtra("instructorEmail");
         note                = getIntent().getStringExtra("note");
-        // TODO
-        // get term id
+        // TODO get term id
 
         repository   = new Repository(getApplication());
         recyclerView = findViewById(R.id.course_assessmentRecyclerView);
@@ -104,7 +104,7 @@ public class CourseDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                // Create new Term object
+                // Create new Course object
                 if (id == -1) {
                     course = new Course(
                             0,
@@ -117,11 +117,11 @@ public class CourseDetails extends AppCompatActivity {
                             editInstructorPhone.getText().toString(),
                             editInstructorEmail.getText().toString(),
                             editNote.getText().toString(),
-                            2   // FIXME need to get term id
+                            1   // FIXME need to get term id
                     );
                     repository.insert(course);
                 }
-                else {  // Update existing Term object data
+                else {  // Update existing Course object data
                     course = new Course(
                             id,
                             editTitle.getText().toString(),
@@ -133,7 +133,7 @@ public class CourseDetails extends AppCompatActivity {
                             editInstructorPhone.getText().toString(),
                             editInstructorEmail.getText().toString(),
                             editNote.getText().toString(),
-                            2   // FIXME need to get term id
+                            1   // FIXME need to get term id
                     );
                     repository.update(course);
                 }

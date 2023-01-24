@@ -36,21 +36,21 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AssessmentViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AssessmentAdapter.AssessmentViewHolder holder, int position) {
         if (mAssessments != null) {
             Assessment currentAssessment = mAssessments.get(position);
-            String title = currentAssessment.getAssessmentTitle();
-            String type = currentAssessment.getAssessmentType();
+            String title     = currentAssessment.getAssessmentTitle();
+            String type      = currentAssessment.getAssessmentType();
             String startDate = currentAssessment.getAssessmentStartDate();
-            String endDate = currentAssessment.getAssessmentEndDate();
+            String endDate   = currentAssessment.getAssessmentEndDate();
 
-            holder.assessmentItemView.setText(title);
+            holder.assessmentItemTitle.setText(title);
             holder.assessmentItemType.setText(type);
             holder.assessmentItemStartDate.setText(startDate);
             holder.assessmentItemEndDate.setText(endDate);
         }
         else {
-            holder.assessmentItemView.setText(R.string.no_data);
+            holder.assessmentItemTitle.setText(R.string.no_data);
             holder.assessmentItemType.setText(R.string.no_data);
             holder.assessmentItemStartDate.setText(R.string.no_data);
             holder.assessmentItemEndDate.setText(R.string.no_data);
@@ -69,7 +69,7 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
 
     class AssessmentViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView assessmentItemView;
+        private final TextView assessmentItemTitle;
         private final TextView assessmentItemType;
         private final TextView assessmentItemStartDate;
         private final TextView assessmentItemEndDate;
@@ -77,7 +77,7 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
         private AssessmentViewHolder(View itemView) {
             super(itemView);
 
-            assessmentItemView      = itemView.findViewById(R.id.assessmentItemTitle);
+            assessmentItemTitle     = itemView.findViewById(R.id.assessmentItemTitle);
             assessmentItemType      = itemView.findViewById(R.id.assessmentItemType);
             assessmentItemStartDate = itemView.findViewById(R.id.assessmentItemStartDate);
             assessmentItemEndDate   = itemView.findViewById(R.id.assessmentItemEndDate);

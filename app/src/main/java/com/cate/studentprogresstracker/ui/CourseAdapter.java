@@ -43,12 +43,12 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             String startDate     = currentCourse.getCourseStartDate();
             String endDate       = currentCourse.getCourseEndDate();
 
-            holder.courseItemView.setText(title);
+            holder.courseItemTitle.setText(title);
             holder.courseItemStartDate.setText(startDate);
             holder.courseItemEndDate.setText(endDate);
         }
         else {
-            holder.courseItemView.setText(R.string.no_data);
+            holder.courseItemTitle.setText(R.string.no_data);
             holder.courseItemStartDate.setText(R.string.no_data);
             holder.courseItemEndDate.setText(R.string.no_data);
         }
@@ -68,12 +68,12 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
         private final TextView courseItemEndDate;
         private final TextView courseItemStartDate;
-        private final TextView courseItemView;
+        private final TextView courseItemTitle;
 
         private CourseViewHolder(View itemView) {
             super(itemView);
 
-            courseItemView      = itemView.findViewById(R.id.courseItemTitle);
+            courseItemTitle     = itemView.findViewById(R.id.courseItemTitle);
             courseItemStartDate = itemView.findViewById(R.id.courseItemStartDate);
             courseItemEndDate   = itemView.findViewById(R.id.courseItemEndDate);
 
