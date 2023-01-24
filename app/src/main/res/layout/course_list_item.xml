@@ -7,8 +7,10 @@
 
     <TextView
         android:id="@+id/courseItemTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -17,36 +19,36 @@
         android:id="@+id/courseItemStartLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="50dp"
         android:text="Starts:"
-        app:layout_constraintStart_toEndOf="@id/courseItemTitle"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/courseItemTitle" />
 
     <TextView
         android:id="@+id/courseItemStartDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="5dp"
         android:text="TextView"
         app:layout_constraintStart_toEndOf="@id/courseItemStartLabel"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/courseItemTitle" />
 
     <TextView
         android:id="@+id/courseItemEndLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="15dp"
         android:text="Ends:"
         app:layout_constraintStart_toEndOf="@+id/courseItemStartDate"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/courseItemTitle" />
 
     <TextView
         android:id="@+id/courseItemEndDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="5dp"
         android:text="TextView"
         app:layout_constraintStart_toEndOf="@+id/courseItemEndLabel"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/courseItemTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

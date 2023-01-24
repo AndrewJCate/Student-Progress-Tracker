@@ -40,6 +40,7 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
         if (mAssessments != null) {
             Assessment currentAssessment = mAssessments.get(position);
             String title = currentAssessment.getAssessmentTitle();
+
             holder.assessmentItemView.setText(title);
         }
         else {
@@ -60,10 +61,18 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
     class AssessmentViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView assessmentItemView;
+        private final TextView assessmentItemType;
+        private final TextView assessmentItemStartDate;
+        private final TextView assessmentItemEndDate;
 
         private AssessmentViewHolder(View itemView) {
             super(itemView);
-            assessmentItemView = itemView.findViewById(R.id.assessmentItem1);
+
+            assessmentItemView      = itemView.findViewById(R.id.assessmentItemTitle);
+            assessmentItemType      = itemView.findViewById(R.id.assessmentItemType);
+            assessmentItemStartDate = itemView.findViewById(R.id.assessmentItemStartDate);
+            assessmentItemEndDate   = itemView.findViewById(R.id.assessmentItemEndDate);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
