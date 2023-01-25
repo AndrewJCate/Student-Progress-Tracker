@@ -6,21 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".ui.AssessmentList">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionAddAssessmentButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:contentDescription="@string/add_assessment"
-        android:src="@drawable/ic_add_48"
-        android:tint="@color/white"
-        app:backgroundTint="@color/blue_200"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:maxImageSize="36dp"
-        app:rippleColor="@color/teal_700" />
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/floatingActionAddAssessmentButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:clickable="true"-->
+<!--        android:contentDescription="@string/add_assessment"-->
+<!--        android:src="@drawable/ic_add_48"-->
+<!--        android:tint="@color/white"-->
+<!--        app:backgroundTint="@color/blue_200"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:maxImageSize="36dp"-->
+<!--        app:rippleColor="@color/teal_700" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/assessmentRecyclerView"

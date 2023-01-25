@@ -20,7 +20,7 @@ public class CourseList extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        FloatingActionButton fab;
+//        FloatingActionButton fab;
         List<Course> allCourses;
         RecyclerView recyclerView;
         Repository repository;
@@ -37,13 +37,13 @@ public class CourseList extends AppCompatActivity {
         allCourses = repository.getAllCourses();
         courseAdapter.setCourses(allCourses);
 
-        fab = findViewById(R.id.floatingActionAddCourseButton);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CourseList.this, CourseDetails.class);
-                startActivity(intent);
-            }
-        });
+//        fab = findViewById(R.id.floatingActionAddCourseButton);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(CourseList.this, CourseDetails.class);
+//                startActivity(intent);
+//            }
+//        });
     }
 }
