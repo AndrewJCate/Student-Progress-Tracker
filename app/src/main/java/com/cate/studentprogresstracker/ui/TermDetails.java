@@ -4,12 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.cate.studentprogresstracker.R;
 
@@ -25,9 +23,8 @@ public class TermDetails extends AppCompatActivity {
     private EditText   editEndDate;
     private EditText   editStartDate;
     private EditText   editTitle;
-    private int        id;
+    private int termId;
     private Repository repository;
-    private Term       term;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +40,7 @@ public class TermDetails extends AppCompatActivity {
         editStartDate = findViewById(R.id.termEditStartDate);
         editEndDate   = findViewById(R.id.termEditEndDate);
 
-        id            = getIntent().getIntExtra("id", -1);
+        termId        = getIntent().getIntExtra("id", -1);
         title         = getIntent().getStringExtra("title");
         startDate     = getIntent().getStringExtra("startDate");
         endDate       = getIntent().getStringExtra("endDate");
@@ -61,20 +58,30 @@ public class TermDetails extends AppCompatActivity {
 
         List<Course> filteredCourses = new ArrayList<>();
         for (Course course : repository.getAllCourses()) {
-            if (course.getTermId() == id) {
+            if (course.getTermId() == termId) {
                 filteredCourses.add(course);
             }
         }
 
         courseAdapter.setCourses(filteredCourses);
 
-        Button button = findViewById(R.id.termSaveDetailsButton);
-        button.setOnClickListener(new View.OnClickListener() {
+//        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.add_course_button_layout);
+//        Button addCourseButton = new Button(this);
+//        addCourseButton.setText("Add Course");
+//        addCourseButton.setBackgroundColor(getColor(R.color.blue_200));
+//        linearLayout.addView(addCourseButton);
+
+//        Intent intent = new Intent(TermDetails.this, CourseDetails.class);
+//        startActivity(intent);
+
+        Button saveButton = findViewById(R.id.termSaveDetailsButton);
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Term term;
 
                 // Create new Term object
-                if (id == -1) {
+                if (termId == -1) {
                     term = new Term(
                             0,
                             editTitle.getText().toString(),
@@ -85,7 +92,7 @@ public class TermDetails extends AppCompatActivity {
                 }
                 else {  // Update existing Term object data
                     term = new Term(
-                            id,
+                            termId,
                             editTitle.getText().toString(),
                             editStartDate.getText().toString(),
                             editEndDate.getText().toString()

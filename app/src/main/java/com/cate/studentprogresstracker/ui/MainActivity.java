@@ -31,24 +31,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        Button coursesButton = findViewById(R.id.button_courses);
-        coursesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, CourseList.class);
-                startActivity(intent);
-            }
-        });
-
-        Button assessmentsButton = findViewById(R.id.button_assessments);
-        assessmentsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AssessmentList.class);
-                startActivity(intent);
-            }
-        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.addSampleData:
                 // Sample data for db
-                Term term = new Term(0, "Current semester", "01-09-2022", "02-28-2023");
+                Term term = new Term(1, "Current semester", "01-09-2022", "02-28-2023");
                 Course course = new Course(0, "Mobile App Development", "01-03-2023",
                         "01-31-2023", "in progress", "Rogers",
                         "Fred", "1234567890", "example@school.edu", "notes go here",

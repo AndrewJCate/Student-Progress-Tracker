@@ -17,10 +17,10 @@ import java.util.List;
 import database.Repository;
 import entities.Assessment;
 import entities.Course;
-import entities.Term;
 
 public class CourseDetails extends AppCompatActivity {
 
+    private int        courseId;
     private EditText   editTitle;
     private EditText   editEndDate;
     private EditText   editStartDate;
@@ -30,10 +30,8 @@ public class CourseDetails extends AppCompatActivity {
     private EditText   editInstructorEmail;
     private EditText   editInstructorPhone;
     private EditText   editNote;
-    private int        id;
     private Repository repository;
-    private Course     course;
-    private int termId; // TODO need to implement
+    private int        termId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +59,7 @@ public class CourseDetails extends AppCompatActivity {
         editInstructorPhone     = findViewById(R.id.courseEditInstructorPhone);
         editNote                = findViewById(R.id.courseEditNotes);
 
-        id                  = getIntent().getIntExtra("id", -1);
+        courseId            = getIntent().getIntExtra("id", -1);
         title               = getIntent().getStringExtra("title");
         startDate           = getIntent().getStringExtra("startDate");
         endDate             = getIntent().getStringExtra("endDate");
@@ -71,7 +69,7 @@ public class CourseDetails extends AppCompatActivity {
         instructorPhone     = getIntent().getStringExtra("instructorPhoneNumber");
         instructorEmail     = getIntent().getStringExtra("instructorEmail");
         note                = getIntent().getStringExtra("note");
-        // TODO get term id
+        termId              = getIntent().getIntExtra("termId", -1);
 
         repository   = new Repository(getApplication());
         recyclerView = findViewById(R.id.course_assessmentRecyclerView);
@@ -92,7 +90,7 @@ public class CourseDetails extends AppCompatActivity {
 
         List<Assessment> filteredAssessments = new ArrayList<>();
         for (Assessment assessment : repository.getAllAssessments()) {
-            if (assessment.getCourseId() == id) {
+            if (assessment.getCourseId() == courseId) {
                 filteredAssessments.add(assessment);
             }
         }
@@ -103,11 +101,23 @@ public class CourseDetails extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Course course;
 
                 // Create new Course object
-                if (id == -1) {
+                if (courseId == -1) {
+                    if (repository.getAllCourses().size() == 0) {
+                        courseId = 1;
+                    }
+                    else {
+                        courseId = repository
+                                .getAllCourses()
+                                .get(repository.getAllCourses().size() - 1)
+                                .getCourseId()
+                                + 1;
+                    }
+
                     course = new Course(
-                            0,
+                            courseId,
                             editTitle.getText().toString(),
                             editStartDate.getText().toString(),
                             editEndDate.getText().toString(),
@@ -117,13 +127,13 @@ public class CourseDetails extends AppCompatActivity {
                             editInstructorPhone.getText().toString(),
                             editInstructorEmail.getText().toString(),
                             editNote.getText().toString(),
-                            1   // FIXME need to get term id
+                            termId
                     );
                     repository.insert(course);
                 }
                 else {  // Update existing Course object data
                     course = new Course(
-                            id,
+                            courseId,
                             editTitle.getText().toString(),
                             editStartDate.getText().toString(),
                             editEndDate.getText().toString(),
@@ -133,7 +143,7 @@ public class CourseDetails extends AppCompatActivity {
                             editInstructorPhone.getText().toString(),
                             editInstructorEmail.getText().toString(),
                             editNote.getText().toString(),
-                            1   // FIXME need to get term id
+                            termId
                     );
                     repository.update(course);
                 }
