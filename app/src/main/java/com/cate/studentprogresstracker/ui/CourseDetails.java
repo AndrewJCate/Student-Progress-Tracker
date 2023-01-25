@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,21 +21,22 @@ import java.util.List;
 import database.Repository;
 import entities.Assessment;
 import entities.Course;
+import entities.Term;
 
 public class CourseDetails extends AppCompatActivity {
 
-    private int        courseId;
-    private EditText   editTitle;
-    private EditText   editEndDate;
-    private EditText   editStartDate;
-    private EditText   editStatus;
-    private EditText   editInstructorFirstName;
-    private EditText   editInstructorLastName;
-    private EditText   editInstructorEmail;
-    private EditText   editInstructorPhone;
-    private EditText   editNote;
+    private int courseId;
+    private EditText editTitle;
+    private EditText editEndDate;
+    private EditText editStartDate;
+    private EditText editStatus;
+    private EditText editInstructorFirstName;
+    private EditText editInstructorLastName;
+    private EditText editInstructorEmail;
+    private EditText editInstructorPhone;
+    private EditText editNote;
     private Repository repository;
-    private int        termId;
+    private int termId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,40 +44,40 @@ public class CourseDetails extends AppCompatActivity {
         setContentView(R.layout.activity_course_details);
 
         RecyclerView recyclerView;
-        String       title;
-        String       startDate;
-        String       endDate;
-        String       status;
-        String       instructorFirstName;
-        String       instructorLastName;
-        String       instructorPhone;
-        String       instructorEmail;
-        String       note;
+        String title;
+        String startDate;
+        String endDate;
+        String status;
+        String instructorFirstName;
+        String instructorLastName;
+        String instructorPhone;
+        String instructorEmail;
+        String note;
         FloatingActionButton fab;
 
-        editTitle               = findViewById(R.id.courseEditTitle);
-        editStartDate           = findViewById(R.id.courseEditStartDate);
-        editEndDate             = findViewById(R.id.courseEditEndDate);
-        editStatus              = findViewById(R.id.courseEditStatus);
+        editTitle = findViewById(R.id.courseEditTitle);
+        editStartDate = findViewById(R.id.courseEditStartDate);
+        editEndDate = findViewById(R.id.courseEditEndDate);
+        editStatus = findViewById(R.id.courseEditStatus);
         editInstructorFirstName = findViewById(R.id.courseEditInstructorFirstName);
-        editInstructorLastName  = findViewById(R.id.courseEditInstructorLastName);
-        editInstructorEmail     = findViewById(R.id.courseEditInstructorEmail);
-        editInstructorPhone     = findViewById(R.id.courseEditInstructorPhone);
-        editNote                = findViewById(R.id.courseEditNotes);
+        editInstructorLastName = findViewById(R.id.courseEditInstructorLastName);
+        editInstructorEmail = findViewById(R.id.courseEditInstructorEmail);
+        editInstructorPhone = findViewById(R.id.courseEditInstructorPhone);
+        editNote = findViewById(R.id.courseEditNotes);
 
-        courseId            = getIntent().getIntExtra("id", -1);
-        title               = getIntent().getStringExtra("title");
-        startDate           = getIntent().getStringExtra("startDate");
-        endDate             = getIntent().getStringExtra("endDate");
-        status              = getIntent().getStringExtra("status");
+        courseId = getIntent().getIntExtra("id", -1);
+        title = getIntent().getStringExtra("title");
+        startDate = getIntent().getStringExtra("startDate");
+        endDate = getIntent().getStringExtra("endDate");
+        status = getIntent().getStringExtra("status");
         instructorFirstName = getIntent().getStringExtra("instructorLastName");
-        instructorLastName  = getIntent().getStringExtra("instructorFirstName");
-        instructorPhone     = getIntent().getStringExtra("instructorPhoneNumber");
-        instructorEmail     = getIntent().getStringExtra("instructorEmail");
-        note                = getIntent().getStringExtra("note");
-        termId              = getIntent().getIntExtra("termId", -1);
+        instructorLastName = getIntent().getStringExtra("instructorFirstName");
+        instructorPhone = getIntent().getStringExtra("instructorPhoneNumber");
+        instructorEmail = getIntent().getStringExtra("instructorEmail");
+        note = getIntent().getStringExtra("note");
+        termId = getIntent().getIntExtra("termId", -1);
 
-        repository   = new Repository(getApplication());
+        repository = new Repository(getApplication());
         recyclerView = findViewById(R.id.course_assessmentRecyclerView);
         final AssessmentAdapter assessmentAdapter = new AssessmentAdapter(this);
 
@@ -121,8 +124,7 @@ public class CourseDetails extends AppCompatActivity {
                             termId
                     );
                     repository.insert(course);
-                }
-                else {  // Update existing Course object data
+                } else {  // Update existing Course object data
                     course = new Course(
                             courseId,
                             editTitle.getText().toString(),
@@ -150,5 +152,25 @@ public class CourseDetails extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.course_details_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.shareCourseDetails:
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, editNote.getText().toString());
+                sendIntent.putExtra(Intent.EXTRA_TITLE, editTitle.getText().toString() + " Notes");
+                sendIntent.setType("text/plain");
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -62,7 +62,11 @@
                     android:layout_height="48dp"
                     android:layout_weight="1"
                     android:layout_marginStart="10dp"
-                    android:hint="MM-DD-YYYY" />
+                    android:hint="start date"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:cursorVisible="false"/>
             </LinearLayout>
 
             <LinearLayout
@@ -84,7 +88,11 @@
                     android:layout_height="48dp"
                     android:layout_weight="1"
                     android:layout_marginStart="18dp"
-                    android:hint="MM-DD-YYYY" />
+                    android:hint="end date"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:cursorVisible="false"/>
 
             </LinearLayout>
 
