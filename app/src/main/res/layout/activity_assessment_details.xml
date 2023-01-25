@@ -40,7 +40,7 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="51dp"
                     android:layout_weight="1"
-                    android:hint="Assessment title" />
+                    android:hint="assessment title" />
             </LinearLayout>
 
             <LinearLayout
@@ -62,7 +62,7 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="47dp"
                     android:layout_weight="1"
-                    android:hint="Objective" />
+                    android:hint="assessment type" />
 
             </LinearLayout>
 
@@ -85,7 +85,11 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
-                    android:hint="MM-DD-YYYY" />
+                    android:hint="start date"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:cursorVisible="false" />
             </LinearLayout>
 
             <LinearLayout
@@ -107,7 +111,11 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="18dp"
                     android:layout_weight="1"
-                    android:hint="MM-DD-YYYY" />
+                    android:hint="end date"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:cursorVisible="false" />
 
             </LinearLayout>
 

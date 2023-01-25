@@ -70,7 +70,7 @@ public class TermDetails extends AppCompatActivity {
         editTitle.setText(title);
 
         // Set date fields to current date if adding new term
-        if (termId == - 1) {
+        if (termId == -1) {
             editStartDate.setText(sdf.format(new Date()));
             editEndDate.setText(sdf.format(new Date()));
         }

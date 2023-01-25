@@ -40,7 +40,7 @@
                     android:layout_height="48dp"
                     android:layout_weight="1"
                     android:layout_marginStart="51dp"
-                    android:hint="Term title" />
+                    android:hint="term title" />
             </LinearLayout>
 
             <LinearLayout

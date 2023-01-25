@@ -40,7 +40,7 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="51dp"
                     android:layout_weight="1"
-                    android:hint="Course title" />
+                    android:hint="course title" />
             </LinearLayout>
 
             <LinearLayout
@@ -62,7 +62,7 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="36dp"
                     android:layout_weight="1"
-                    android:hint="In progress" />
+                    android:hint="in progress" />
 
             </LinearLayout>
 
@@ -147,7 +147,7 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="58dp"
                     android:layout_weight="1"
-                    android:hint="Professor" />
+                    android:hint="first name" />
 
             </LinearLayout>
 
@@ -170,7 +170,7 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="59dp"
                     android:layout_weight="1"
-                    android:hint="Hamilton" />
+                    android:hint="last name" />
 
             </LinearLayout>
 
@@ -216,7 +216,7 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="34dp"
                     android:layout_weight="1"
-                    android:hint="phamilton@school.edu" />
+                    android:hint="example@domain.com" />
 
             </LinearLayout>
 
@@ -236,7 +236,7 @@
                 android:layout_marginEnd="10dp"
                 android:ems="10"
                 android:gravity="start|top"
-                android:hint="Notes"
+                android:hint="notes"
                 android:inputType="textMultiLine"
                 android:minHeight="48dp" />
 

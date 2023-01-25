@@ -105,7 +105,7 @@ public class CourseDetails extends AppCompatActivity {
         editNote.setText(note);
 
         // Set date fields to current date if adding new term
-        if (courseId == - 1) {
+        if (courseId == -1) {
             editStartDate.setText(sdf.format(new Date()));
             editEndDate.setText(sdf.format(new Date()));
         }
