@@ -92,7 +92,6 @@ public class TermDetails extends AppCompatActivity {
                 filteredCourses.add(course);
             }
         }
-
         courseAdapter.setCourses(filteredCourses);
 
         Button saveButton = findViewById(R.id.termSaveDetailsButton);
@@ -208,14 +207,4 @@ public class TermDetails extends AppCompatActivity {
 
         editText.setText(sdf.format(calendar.getTime()));
     }
-
-//    private void updateEndDateLabel() {
-//        String dateFormat;
-//        SimpleDateFormat sdf;
-//
-//        dateFormat = "MM/dd/yy";
-//        sdf = new SimpleDateFormat(dateFormat, Locale.US);
-//
-//        editEndDate.setText(sdf.format(CALENDAR_END.getTime()));
-//    }
 }

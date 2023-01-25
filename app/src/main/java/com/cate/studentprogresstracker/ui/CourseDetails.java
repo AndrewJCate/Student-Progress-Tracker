@@ -4,19 +4,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.cate.studentprogresstracker.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import database.Repository;
 import entities.Assessment;
@@ -24,6 +31,9 @@ import entities.Course;
 import entities.Term;
 
 public class CourseDetails extends AppCompatActivity {
+
+    private final Calendar CALENDAR_START = Calendar.getInstance();
+    private final Calendar CALENDAR_END = Calendar.getInstance();
 
     private int courseId;
     private EditText editTitle;
@@ -37,6 +47,8 @@ public class CourseDetails extends AppCompatActivity {
     private EditText editNote;
     private Repository repository;
     private int termId;
+    private DatePickerDialog.OnDateSetListener startDateDialog;
+    private DatePickerDialog.OnDateSetListener endDateDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +66,8 @@ public class CourseDetails extends AppCompatActivity {
         String instructorEmail;
         String note;
         FloatingActionButton fab;
+        String dateFormat;
+        SimpleDateFormat sdf;
 
         editTitle = findViewById(R.id.courseEditTitle);
         editStartDate = findViewById(R.id.courseEditStartDate);
@@ -65,6 +79,10 @@ public class CourseDetails extends AppCompatActivity {
         editInstructorPhone = findViewById(R.id.courseEditInstructorPhone);
         editNote = findViewById(R.id.courseEditNotes);
 
+        dateFormat = "MM/dd/yy";
+        sdf = new SimpleDateFormat(dateFormat, Locale.US);
+
+        // Get current values of selected course if any
         courseId = getIntent().getIntExtra("id", -1);
         title = getIntent().getStringExtra("title");
         startDate = getIntent().getStringExtra("startDate");
@@ -77,13 +95,8 @@ public class CourseDetails extends AppCompatActivity {
         note = getIntent().getStringExtra("note");
         termId = getIntent().getIntExtra("termId", -1);
 
-        repository = new Repository(getApplication());
-        recyclerView = findViewById(R.id.course_assessmentRecyclerView);
-        final AssessmentAdapter assessmentAdapter = new AssessmentAdapter(this);
-
+        // Set existing values to display in text areas
         editTitle.setText(title);
-        editStartDate.setText(startDate);
-        editEndDate.setText(endDate);
         editStatus.setText(status);
         editInstructorFirstName.setText(instructorFirstName);
         editInstructorLastName.setText(instructorLastName);
@@ -91,6 +104,20 @@ public class CourseDetails extends AppCompatActivity {
         editInstructorPhone.setText(instructorPhone);
         editNote.setText(note);
 
+        // Set date fields to current date if adding new term
+        if (courseId == - 1) {
+            editStartDate.setText(sdf.format(new Date()));
+            editEndDate.setText(sdf.format(new Date()));
+        }
+        else {
+            editStartDate.setText(startDate);
+            editEndDate.setText(endDate);
+        }
+
+        // Set list of assessments
+        repository = new Repository(getApplication());
+        recyclerView = findViewById(R.id.course_assessmentRecyclerView);
+        final AssessmentAdapter assessmentAdapter = new AssessmentAdapter(this);
         recyclerView.setAdapter(assessmentAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -152,6 +179,82 @@ public class CourseDetails extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Display calendar when clicking on start date text view
+        editStartDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    CALENDAR_START.setTime(sdf.parse(editStartDate.getText().toString()));
+                }
+                catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                new DatePickerDialog(
+                        CourseDetails.this,
+                        startDateDialog,
+                        CALENDAR_START.get(Calendar.YEAR),
+                        CALENDAR_START.get(Calendar.MONTH),
+                        CALENDAR_START.get(Calendar.DAY_OF_MONTH))
+                        .show();
+            }
+        });
+
+        // Saves selected start date info from calendar
+        startDateDialog = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                CALENDAR_START.set(Calendar.YEAR, year);
+                CALENDAR_START.set(Calendar.MONTH, month);
+                CALENDAR_START.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                updateLabel(editStartDate, CALENDAR_START);
+            }
+        };
+
+        // Display calendar when clicking on end date text view
+        editEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    CALENDAR_END.setTime(sdf.parse(editEndDate.getText().toString()));
+                }
+                catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                new DatePickerDialog(
+                        CourseDetails.this,
+                        endDateDialog,
+                        CALENDAR_END.get(Calendar.YEAR),
+                        CALENDAR_END.get(Calendar.MONTH),
+                        CALENDAR_END.get(Calendar.DAY_OF_MONTH))
+                        .show();
+            }
+        });
+
+        // Saves selected end date info from calendar
+        endDateDialog = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                CALENDAR_END.set(Calendar.YEAR, year);
+                CALENDAR_END.set(Calendar.MONTH, month);
+                CALENDAR_END.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                updateLabel(editEndDate, CALENDAR_END);
+            }
+        };
+    }
+
+    private void updateLabel(EditText editText, Calendar calendar) {
+        String dateFormat;
+        SimpleDateFormat sdf;
+
+        dateFormat = "MM/dd/yy";
+        sdf = new SimpleDateFormat(dateFormat, Locale.US);
+
+        editText.setText(sdf.format(calendar.getTime()));
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
