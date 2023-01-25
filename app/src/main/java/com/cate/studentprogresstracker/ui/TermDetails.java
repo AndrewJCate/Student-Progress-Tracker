@@ -4,12 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.cate.studentprogresstracker.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,7 @@ public class TermDetails extends AppCompatActivity {
         RecyclerView recyclerView;
         String       startDate;
         String       title;
+        FloatingActionButton fab;
 
         editTitle     = findViewById(R.id.termEditTitle);
         editStartDate = findViewById(R.id.termEditStartDate);
@@ -65,15 +68,6 @@ public class TermDetails extends AppCompatActivity {
 
         courseAdapter.setCourses(filteredCourses);
 
-//        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.add_course_button_layout);
-//        Button addCourseButton = new Button(this);
-//        addCourseButton.setText("Add Course");
-//        addCourseButton.setBackgroundColor(getColor(R.color.blue_200));
-//        linearLayout.addView(addCourseButton);
-
-//        Intent intent = new Intent(TermDetails.this, CourseDetails.class);
-//        startActivity(intent);
-
         Button saveButton = findViewById(R.id.termSaveDetailsButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +93,16 @@ public class TermDetails extends AppCompatActivity {
                     );
                     repository.update(term);
                 }
+            }
+        });
+
+        fab = findViewById(R.id.termDetailsFab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TermDetails.this, CourseDetails.class);
+                intent.putExtra("termId", termId);
+                startActivity(intent);
             }
         });
     }

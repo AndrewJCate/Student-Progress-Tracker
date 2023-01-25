@@ -57,19 +57,8 @@ public class AssessmentDetails extends AppCompatActivity {
             public void onClick(View v) {
                 Assessment assessment;
                 if (assessmentId == -1) {
-                    if (repository.getAllAssessments().size() == 0) {
-                        assessmentId = 1;
-                    }
-                    else {
-                        assessmentId = repository
-                                .getAllAssessments()
-                                .get(repository.getAllAssessments().size() - 1)
-                                .getAssessmentId()
-                                + 1;
-                    }
-
                     assessment = new Assessment(
-                            assessmentId,
+                            0,
                             editTitle.getText().toString(),
                             editType.getText().toString(),
                             editStartDate.getText().toString(),

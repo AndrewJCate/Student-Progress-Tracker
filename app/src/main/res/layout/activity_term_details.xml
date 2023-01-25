@@ -31,7 +31,7 @@
                     android:id="@+id/termTitleLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Course Title:"
+                    android:text="Term Title:"
                     android:textSize="16sp" />
 
                 <EditText
@@ -40,7 +40,7 @@
                     android:layout_height="48dp"
                     android:layout_weight="1"
                     android:layout_marginStart="51dp"
-                    android:hint="Course title" />
+                    android:hint="Term title" />
             </LinearLayout>
 
             <LinearLayout
@@ -53,7 +53,7 @@
                     android:id="@+id/termStartDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Course Start Date:"
+                    android:text="Term Start Date:"
                     android:textSize="16sp" />
 
                 <EditText
@@ -75,7 +75,7 @@
                     android:id="@+id/termEndDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Course End Date:"
+                    android:text="Term End Date:"
                     android:textSize="16sp" />
 
                 <EditText
@@ -115,13 +115,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/termScrollView" />
 
-    <LinearLayout
-        android:id="@+id/add_course_button_layout"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/termDetailsFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="20dp"
-        android:orientation="vertical"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:contentDescription="@string/add_term"
+        android:src="@drawable/ic_add_48"
+        android:tint="@color/white"
+        app:backgroundTint="@color/blue_200"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"></LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="36dp"
+        app:rippleColor="@color/teal_700" />
 </androidx.constraintlayout.widget.ConstraintLayout>
