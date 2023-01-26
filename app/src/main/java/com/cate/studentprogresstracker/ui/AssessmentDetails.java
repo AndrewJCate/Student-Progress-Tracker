@@ -90,6 +90,12 @@ public class AssessmentDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Assessment assessment;
+
+                // Set default title if left blank
+                if (editTitle.getText().toString().equals("")) {
+                    editTitle.setText("*blank*");
+                }
+
                 if (assessmentId == -1) {
                     assessment = new Assessment(
                             0,

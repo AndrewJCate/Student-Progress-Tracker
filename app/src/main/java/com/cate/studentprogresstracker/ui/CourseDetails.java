@@ -137,6 +137,11 @@ public class CourseDetails extends AppCompatActivity {
             public void onClick(View v) {
                 Course course;
 
+                // Set default title if left blank
+                if (editTitle.getText().toString().equals("")) {
+                    editTitle.setText("*blank*");
+                }
+
                 // Create new Course object
                 if (courseId == -1) {
                     course = new Course(

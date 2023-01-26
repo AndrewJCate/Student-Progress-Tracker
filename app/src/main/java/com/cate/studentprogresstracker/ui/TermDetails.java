@@ -100,6 +100,11 @@ public class TermDetails extends AppCompatActivity {
             public void onClick(View v) {
                 Term term;
 
+                // Set default title if left blank
+                if (editTitle.getText().toString().equals("")) {
+                    editTitle.setText("*blank*");
+                }
+
                 // Create new Term object
                 if (termId == -1) {
                     term = new Term(
