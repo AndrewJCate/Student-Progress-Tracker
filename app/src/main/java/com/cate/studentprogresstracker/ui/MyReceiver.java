@@ -15,24 +15,14 @@ import com.cate.studentprogresstracker.R;
 public class MyReceiver extends BroadcastReceiver {
 
     private final String CHANNEL_ID = "progress_tracker";
-    public static int notificationId;
+    public static int notificationId = 0;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Notification notification;
-        NotificationManager notificationManager;
-
         Toast.makeText(context, "Notification created successfully.",Toast.LENGTH_LONG).show();
+
         createNotificationChannel(context, CHANNEL_ID);
-
-        notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentText(intent.getStringExtra("msg"))
-                .setContentTitle("Student Progress Tracker notification")
-                .build();
-
-        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(notificationId++, notification);
+        createNotification(context, intent.getStringExtra("msg"));
     }
 
     private void createNotificationChannel(Context context, String channel_id) {
@@ -42,13 +32,30 @@ public class MyReceiver extends BroadcastReceiver {
         NotificationChannel channel;
         NotificationManager notificationManager;
 
-        name = context.getResources().getString(R.string.student_progress_tracker_channel);
+        name = context.getResources().getString(R.string.channel_name);
         description = context.getString(R.string.channel_description);
         importance = NotificationManager.IMPORTANCE_DEFAULT;
 
         channel = new NotificationChannel(channel_id, name, importance);
         channel.setDescription(description);
+
+        // Register channel with system
         notificationManager = context.getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
+    }
+
+    private void createNotification(Context context, String text) {
+        Notification notification;
+        NotificationManager notificationManager;
+
+        notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle(context.getString(R.string.app_title))
+                .setContentText(text)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .build();
+
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(notificationId++, notification);
     }
 }
