@@ -4,15 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.cate.studentprogresstracker.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.ParseException;
@@ -24,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 
 import database.Repository;
+import entities.Assessment;
 import entities.Course;
 import entities.Term;
 
@@ -94,6 +100,7 @@ public class TermDetails extends AppCompatActivity {
         }
         courseAdapter.setCourses(filteredCourses);
 
+        // Save term details button
         Button saveButton = findViewById(R.id.termSaveDetailsButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +129,63 @@ public class TermDetails extends AppCompatActivity {
                             editEndDate.getText().toString()
                     );
                     repository.update(term);
+                }
+            }
+        });
+
+        // Add delete button
+        LinearLayout layout = findViewById(R.id.termDeleteButtonLayout);
+        Button deleteButton = new MaterialButton(this);
+        deleteButton.setText(R.string.delete);
+        deleteButton.setBackgroundColor(getResources().getColor(R.color.dark_red, this.getTheme()));
+        layout.addView(deleteButton);
+
+        // Delete button clicked
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Term currentTerm = null;
+
+                // Find current term
+                for (Term term : repository.getAllTerms()) {
+
+                    // Current term found
+                    if (term.getTermId() == termId) {
+                        currentTerm = term;
+
+                        // Find any associated courses
+                        for (Course course : repository.getAllCourses()) {
+
+                            // Term has associated courses
+                            if (course.getTermId() == termId) {
+                                Toast.makeText(TermDetails.this, "Cannot delete term with courses. Remove courses before deleting term.", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                // Term not found
+                if (currentTerm == null) {
+                    Toast.makeText(TermDetails.this, "Term not found.", Toast.LENGTH_LONG).show();
+                }
+                else {  // Term found and no associated courses
+                    // Delete confirmation dialog
+                    Term finalCurrentTerm = currentTerm;
+                    new AlertDialog.Builder(TermDetails.this)
+                            .setTitle("Delete Term")
+                            .setMessage("Are you sure you want to delete this term?")
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Delete approved
+                                    repository.delete(finalCurrentTerm);
+                                    Toast.makeText(TermDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
+                                    //TODO: return to previous screen
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
                 }
             }
         });
