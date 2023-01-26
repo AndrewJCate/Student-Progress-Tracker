@@ -136,6 +136,42 @@ public class CourseDetails extends AppCompatActivity {
         }
         assessmentAdapter.setAssessments(filteredAssessments);
 
+        // Add delete button
+        LinearLayout deleteButtonLayout = findViewById(R.id.courseDeleteButtonLayout);
+        Button deleteButton = new MaterialButton(this);
+        deleteButton.setText(R.string.delete);
+        deleteButton.setBackgroundColor(getResources().getColor(R.color.dark_red, this.getTheme()));
+        deleteButtonLayout.addView(deleteButton);
+
+        // Delete button clicked
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Delete confirmation dialog
+                new AlertDialog.Builder(CourseDetails.this)
+                        .setTitle("Delete Course")
+                        .setMessage("Are you sure you want to delete this course?")
+                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Delete approved
+                                for (Course course : repository.getAllCourses()) {
+                                    if (course.getCourseId() == courseId) {
+                                        repository.delete(course);
+                                        Toast.makeText(CourseDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
+                                        return;
+                                        // TODO: return to previous screen
+                                    }
+                                }
+                                // Not deleted
+                                Toast.makeText(CourseDetails.this, "Course not found.", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+            }
+        });
+
         // Save button clicked
         Button saveButton = findViewById(R.id.courseSaveDetailsButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -183,41 +219,14 @@ public class CourseDetails extends AppCompatActivity {
             }
         });
 
-        // Add delete button
-        LinearLayout layout = findViewById(R.id.courseDeleteButtonLayout);
-        Button deleteButton = new MaterialButton(this);
-        deleteButton.setText(R.string.delete);
-        deleteButton.setBackgroundColor(getResources().getColor(R.color.dark_red, this.getTheme()));
-        layout.addView(deleteButton);
-
-        // Delete button clicked
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Delete confirmation dialog
-                new AlertDialog.Builder(CourseDetails.this)
-                        .setTitle("Delete Course")
-                        .setMessage("Are you sure you want to delete this course?")
-                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Delete approved
-                                for (Course course : repository.getAllCourses()) {
-                                    if (course.getCourseId() == courseId) {
-                                        repository.delete(course);
-                                        Toast.makeText(CourseDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
-                                        return;
-                                        // TODO: return to previous screen
-                                    }
-                                }
-                                // Not deleted
-                                Toast.makeText(CourseDetails.this, "Course not found.", Toast.LENGTH_LONG).show();
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, null)
-                        .show();
-            }
-        });
+        // Hides fab and Assessments views if creating new course
+        FloatingActionButton courseFab = findViewById(R.id.courseDetailsFab);
+        LinearLayout assessmentsLayout = findViewById(R.id.courseDetailsAssessmentsLayout);
+        if (courseId == -1) {
+            courseFab.setVisibility(View.GONE);
+            assessmentsLayout.setVisibility(View.GONE);
+            deleteButtonLayout.setVisibility(View.INVISIBLE);
+        }
 
         fab = findViewById(R.id.courseDetailsFab);
         fab.setOnClickListener(new View.OnClickListener() {
