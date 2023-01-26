@@ -4,11 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -275,5 +280,48 @@ public class TermDetails extends AppCompatActivity {
         sdf = new SimpleDateFormat(dateFormat, Locale.US);
 
         editText.setText(sdf.format(calendar.getTime()));
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.term_details_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.deleteCourses:
+                new AlertDialog.Builder(TermDetails.this)
+                        .setTitle("Delete All Courses")
+                        .setMessage("Are you sure you want to delete ALL courses associated with this term?")
+                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Boolean isDeleted = false;
+                                // Delete approved
+
+                                // Find any associated courses
+                                for (Course course : repository.getAllCourses()) {
+
+                                    // Term has associated courses
+                                    if (course.getTermId() == termId) {
+                                        repository.delete(course);
+                                        isDeleted = true;
+                                    }
+                                }
+
+                                if (isDeleted) {
+                                    Toast.makeText(TermDetails.this, "All associated courses deleted.", Toast.LENGTH_LONG).show();
+                                }
+                                else {
+                                    Toast.makeText(TermDetails.this, "No courses to delete.", Toast.LENGTH_LONG).show();
+                                }
+                                // TODO: refresh screen
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
