@@ -5,9 +5,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,8 +18,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.cate.studentprogresstracker.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.ParseException;
@@ -131,8 +136,9 @@ public class CourseDetails extends AppCompatActivity {
         }
         assessmentAdapter.setAssessments(filteredAssessments);
 
-        Button button = findViewById(R.id.courseSaveDetailsButton);
-        button.setOnClickListener(new View.OnClickListener() {
+        // Save button clicked
+        Button saveButton = findViewById(R.id.courseSaveDetailsButton);
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Course course;
@@ -174,6 +180,42 @@ public class CourseDetails extends AppCompatActivity {
                     );
                     repository.update(course);
                 }
+            }
+        });
+
+        // Add delete button
+        LinearLayout layout = findViewById(R.id.courseDeleteButtonLayout);
+        Button deleteButton = new MaterialButton(this);
+        deleteButton.setText(R.string.delete);
+        deleteButton.setBackgroundColor(getResources().getColor(R.color.dark_red, this.getTheme()));
+        layout.addView(deleteButton);
+
+        // Delete button clicked
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Delete confirmation dialog
+                new AlertDialog.Builder(CourseDetails.this)
+                        .setTitle("Delete Course")
+                        .setMessage("Are you sure you want to delete this course?")
+                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Delete approved
+                                for (Course course : repository.getAllCourses()) {
+                                    if (course.getCourseId() == courseId) {
+                                        repository.delete(course);
+                                        Toast.makeText(CourseDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
+                                        return;
+                                        // TODO: return to previous screen
+                                    }
+                                }
+                                // Not deleted
+                                Toast.makeText(CourseDetails.this, "Course not found.", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
             }
         });
 
