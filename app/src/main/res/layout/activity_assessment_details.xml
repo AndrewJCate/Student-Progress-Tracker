@@ -85,11 +85,11 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
-                    android:hint="start date"
                     android:clickable="false"
+                    android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:cursorVisible="false" />
+                    android:hint="start date" />
             </LinearLayout>
 
             <LinearLayout
@@ -111,20 +111,38 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="18dp"
                     android:layout_weight="1"
-                    android:hint="end date"
                     android:clickable="false"
+                    android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:cursorVisible="false" />
+                    android:hint="end date" />
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/assessmentSaveDetailsButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/assessmentButtonLayout"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/save" />
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/deleteButtonLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="vertical">
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/assessmentSaveDetailsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/save" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

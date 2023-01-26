@@ -1,21 +1,28 @@
 package com.cate.studentprogresstracker.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.cate.studentprogresstracker.R;
+import com.google.android.material.button.MaterialButton;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -85,8 +92,9 @@ public class AssessmentDetails extends AppCompatActivity {
 
         repository = new Repository(getApplication());
 
-        Button button = findViewById(R.id.assessmentSaveDetailsButton);
-        button.setOnClickListener(new View.OnClickListener() {
+        // Save button clicked
+        Button saveButton = findViewById(R.id.assessmentSaveDetailsButton);
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Assessment assessment;
@@ -96,6 +104,7 @@ public class AssessmentDetails extends AppCompatActivity {
                     editTitle.setText("*blank*");
                 }
 
+                // Create new Assessment
                 if (assessmentId == -1) {
                     assessment = new Assessment(
                             0,
@@ -119,6 +128,42 @@ public class AssessmentDetails extends AppCompatActivity {
                 }
             }
         });
+
+        // Add delete button
+        LinearLayout layout = findViewById(R.id.deleteButtonLayout);
+        Button deleteButton = new MaterialButton(this);
+        deleteButton.setText("DELETE");
+        deleteButton.setBackgroundColor(getResources().getColor(R.color.dark_red, this.getTheme()));
+        layout.addView(deleteButton);
+
+        // Delete button clicked
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Delete confirmation dialog
+                AlertDialog builder = new AlertDialog.Builder(AssessmentDetails.this)
+                        .setTitle("Delete Assessment")
+                        .setMessage("Are you sure you want to delete this assessment?")
+                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Delete approved
+                                for (Assessment assessment : repository.getAllAssessments()) {
+                                    if (assessment.getAssessmentId() == assessmentId) {
+                                        repository.delete(assessment);
+                                        Toast.makeText(AssessmentDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
+                                        return;
+                                    }
+                                }
+                                // Not deleted
+                                Toast.makeText(AssessmentDetails.this, "Assessment not found.", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+            }
+        });
+
 
         // Display calendar when clicking on start date text view
         editStartDate.setOnClickListener(new View.OnClickListener() {
