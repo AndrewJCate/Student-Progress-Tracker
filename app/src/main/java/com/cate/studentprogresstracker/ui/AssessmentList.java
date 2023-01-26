@@ -20,7 +20,6 @@ public class AssessmentList extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        FloatingActionButton fab;
         List<Assessment> allAssessments;
         RecyclerView recyclerView;
         Repository repository;
@@ -36,14 +35,5 @@ public class AssessmentList extends AppCompatActivity {
         repository = new Repository(getApplication());
         allAssessments = repository.getAllAssessments();
         assessmentAdapter.setAssessments(allAssessments);
-
-//        fab = findViewById(R.id.floatingActionAddAssessmentButton);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(AssessmentList.this, AssessmentDetails.class);
-//                startActivity(intent);
-//            }
-//        });
     }
 }

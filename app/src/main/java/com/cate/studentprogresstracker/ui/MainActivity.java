@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                         "Fred", "1234567890", "example@school.edu", "notes go here",
                         1);
                 Assessment assessment = new Assessment(0, "ASMT 24-B",
-                        "objective", "01/20/23", "01/31/23", 1);
+                        "Objective", "01/20/23", "01/31/23", 1);
                 Repository repo = new Repository(getApplication());
                 repo.insert(term);
                 repo.insert(course);

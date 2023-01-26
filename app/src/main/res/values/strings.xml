@@ -18,4 +18,8 @@
     <string name="app_title">Student Progress Tracker</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string-array name="assessment_types">
+        <item>Objective</item>
+        <item>Performance</item>
+    </string-array>
 </resources>

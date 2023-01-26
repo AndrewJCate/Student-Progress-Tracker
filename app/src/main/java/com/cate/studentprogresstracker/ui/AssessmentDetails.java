@@ -13,10 +13,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.cate.studentprogresstracker.R;
@@ -24,8 +27,11 @@ import com.google.android.material.button.MaterialButton;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import database.Repository;
@@ -38,7 +44,7 @@ public class AssessmentDetails extends AppCompatActivity {
 
     private int assessmentId;
     private EditText editTitle;
-    private EditText editType;
+    private String editType;
     private EditText editEndDate;
     private EditText editStartDate;
     private Repository repository;
@@ -57,9 +63,10 @@ public class AssessmentDetails extends AppCompatActivity {
         String endDate;
         String dateFormat;
         SimpleDateFormat sdf;
+        Spinner typeSpinner;
 
         editTitle = findViewById(R.id.assessmentEditTitle);
-        editType = findViewById(R.id.assessmentEditType);
+//        editType = findViewById(R.id.assessmentEditType);
         editStartDate = findViewById(R.id.assessmentEditStartDate);
         editEndDate = findViewById(R.id.assessmentEditEndDate);
 
@@ -76,7 +83,7 @@ public class AssessmentDetails extends AppCompatActivity {
 
         // Set existing values to display in text areas
         editTitle.setText(title);
-        editType.setText(type);
+//        editType.setText(type);
 
         // Set date fields to current date if adding new term
         if (assessmentId == -1) {
@@ -87,6 +94,33 @@ public class AssessmentDetails extends AppCompatActivity {
             editStartDate.setText(startDate);
             editEndDate.setText(endDate);
         }
+
+        // Set spinner contents
+        typeSpinner = findViewById(R.id.assessmentTypeSpinner);
+        ArrayAdapter<CharSequence> assessmentArrayAdapter = ArrayAdapter.createFromResource(this, R.array.assessment_types, android.R.layout.simple_spinner_item);
+        assessmentArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        typeSpinner.setAdapter(assessmentArrayAdapter);
+
+        // Set spinner selection to match existing value
+        if (type == null) {
+            typeSpinner.setSelection(0);
+        }
+        else {
+            typeSpinner.setSelection(assessmentArrayAdapter.getPosition(type));
+        }
+
+        // Get spinner item when clicked
+        typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+              @Override
+              public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                  editType = parent.getItemAtPosition(position).toString();
+              }
+
+              @Override
+              public void onNothingSelected(AdapterView<?> parent) {
+                  // Do nothing
+              }
+        });
 
         repository = new Repository(getApplication());
 
@@ -107,7 +141,7 @@ public class AssessmentDetails extends AppCompatActivity {
                     assessment = new Assessment(
                             0,
                             editTitle.getText().toString(),
-                            editType.getText().toString(),
+                            editType,
                             editStartDate.getText().toString(),
                             editEndDate.getText().toString(),
                             courseId
@@ -117,7 +151,7 @@ public class AssessmentDetails extends AppCompatActivity {
                     assessment = new Assessment(
                             assessmentId,
                             editTitle.getText().toString(),
-                            editType.getText().toString(),
+                            editType,
                             editStartDate.getText().toString(),
                             editEndDate.getText().toString(),
                             courseId
