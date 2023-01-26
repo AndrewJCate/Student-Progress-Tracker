@@ -11,7 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.StudentProgressTracker"
-        tools:targetApi="33">
+        tools:targetApi="32">
+
+        <receiver
+            android:name=".ui.MyReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
+
         <activity
             android:name=".ui.AssessmentDetails"
             android:exported="false"

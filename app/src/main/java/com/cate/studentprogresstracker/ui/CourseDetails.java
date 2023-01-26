@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -28,7 +31,6 @@ import java.util.Locale;
 import database.Repository;
 import entities.Assessment;
 import entities.Course;
-import entities.Term;
 
 public class CourseDetails extends AppCompatActivity {
 
@@ -263,6 +265,15 @@ public class CourseDetails extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
+        String dateFromScreen;
+        String dateFormat;
+        SimpleDateFormat sdf;
+        Date date;
+        Long trigger;
+        Intent intent;
+        PendingIntent pendingIntent;
+        AlarmManager alarmManager;
+
         switch (item.getItemId()) {
             case R.id.shareCourseDetails:
                 Intent sendIntent = new Intent();
@@ -270,8 +281,62 @@ public class CourseDetails extends AppCompatActivity {
                 sendIntent.putExtra(Intent.EXTRA_TEXT, editNote.getText().toString());
                 sendIntent.putExtra(Intent.EXTRA_TITLE, editTitle.getText().toString() + " Notes");
                 sendIntent.setType("text/plain");
+
                 Intent shareIntent = Intent.createChooser(sendIntent, null);
                 startActivity(shareIntent);
+
+                return true;
+
+            case R.id.courseNotifyStart:
+                dateFromScreen = editStartDate.getText().toString();
+                dateFormat = "MM/dd/yy";
+                sdf = new SimpleDateFormat(dateFormat, Locale.US);
+                date = null;
+
+                try {
+                    date = sdf.parse(dateFromScreen);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                trigger = date.getTime();
+
+                intent = new Intent(CourseDetails.this, MyReceiver.class);
+                intent.putExtra("msg", "Course " + editTitle.getText().toString() + " starting.");
+                pendingIntent = PendingIntent.getBroadcast(
+                        CourseDetails.this,
+                        ++MainActivity.alertNumber,
+                        intent,
+                        PendingIntent.FLAG_IMMUTABLE);
+                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+
+                return true;
+
+            case R.id.courseNotifyEnd:
+                dateFromScreen = editEndDate.getText().toString();
+                dateFormat = "MM/dd/yy";
+                sdf = new SimpleDateFormat(dateFormat, Locale.US);
+                date = null;
+
+                try {
+                    date = sdf.parse(dateFromScreen);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                trigger = date.getTime();
+
+                intent = new Intent(CourseDetails.this, MyReceiver.class);
+                intent.putExtra("msg", "Course " + editTitle.getText().toString() + " ending.");
+                pendingIntent = PendingIntent.getBroadcast(
+                        CourseDetails.this,
+                        ++MainActivity.alertNumber,
+                        intent,
+                        PendingIntent.FLAG_IMMUTABLE);
+                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+
                 return true;
         }
         return super.onOptionsItemSelected(item);

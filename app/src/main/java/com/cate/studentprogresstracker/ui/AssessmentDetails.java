@@ -2,8 +2,14 @@ package com.cate.studentprogresstracker.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -183,5 +189,76 @@ public class AssessmentDetails extends AppCompatActivity {
         sdf = new SimpleDateFormat(dateFormat, Locale.US);
 
         editText.setText(sdf.format(calendar.getTime()));
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.assessment_details_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String dateFromScreen;
+        String dateFormat;
+        SimpleDateFormat sdf;
+        Date date;
+        Long trigger;
+        Intent intent;
+        PendingIntent pendingIntent;
+        AlarmManager alarmManager;
+
+        switch (item.getItemId()) {
+            case R.id.assessmentNotifyStart:
+                dateFromScreen = editStartDate.getText().toString();
+                dateFormat = "MM/dd/yy";
+                sdf = new SimpleDateFormat(dateFormat, Locale.US);
+                date = null;
+
+                try {
+                    date = sdf.parse(dateFromScreen);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                trigger = date.getTime();
+
+                intent = new Intent(AssessmentDetails.this, MyReceiver.class);
+                intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " starting.");
+                pendingIntent = PendingIntent.getBroadcast(
+                        AssessmentDetails.this,
+                        ++MainActivity.alertNumber,
+                        intent,
+                        PendingIntent.FLAG_IMMUTABLE);
+                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+
+                return true;
+
+            case R.id.assessmentNotifyEnd:
+                dateFromScreen = editEndDate.getText().toString();
+                dateFormat = "MM/dd/yy";
+                sdf = new SimpleDateFormat(dateFormat, Locale.US);
+                date = null;
+
+                try {
+                    date = sdf.parse(dateFromScreen);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                trigger = date.getTime();
+
+                intent = new Intent(AssessmentDetails.this, MyReceiver.class);
+                intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " ending.");
+                pendingIntent = PendingIntent.getBroadcast(
+                        AssessmentDetails.this,
+                        ++MainActivity.alertNumber,
+                        intent,
+                        PendingIntent.FLAG_IMMUTABLE);
+                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

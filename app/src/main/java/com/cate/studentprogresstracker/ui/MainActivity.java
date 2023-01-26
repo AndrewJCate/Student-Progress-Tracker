@@ -17,6 +17,7 @@ import entities.Course;
 import entities.Term;
 
 public class MainActivity extends AppCompatActivity {
+    public static int alertNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

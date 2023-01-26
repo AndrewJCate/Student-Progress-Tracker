@@ -13,4 +13,6 @@
     <string name="save">Save</string>
     <string name="no_data">No data</string>
     <string name="share_notes">Share Notes</string>
+    <string name="student_progress_tracker_channel">StudentProgressTrackerChannel</string>
+    <string name="channel_description">Date notifications for Student Progress Tracker app.</string>
 </resources>

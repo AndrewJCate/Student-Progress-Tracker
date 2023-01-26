@@ -3,4 +3,12 @@
     <item
         android:id="@+id/shareCourseDetails"
         android:title="@string/share_notes" />
+
+    <item
+        android:id="@+id/courseNotifyStart"
+        android:title="Course Start Notification" />
+
+    <item
+        android:id="@+id/courseNotifyEnd"
+        android:title="Course End Notification" />
 </menu>
