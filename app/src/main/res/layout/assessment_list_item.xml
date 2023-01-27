@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -21,7 +19,7 @@
                 android:id="@+id/assessmentItemTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="@string/textview"
                 android:textStyle="bold" />
 
             <TextView
@@ -30,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_weight="0"
-                android:text="Type:" />
+                android:text="@string/type_label" />
 
             <TextView
                 android:id="@+id/assessmentItemType"
@@ -38,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_weight="0"
-                android:text="TextView" />
+                android:text="@string/textview" />
 
         </LinearLayout>
 
@@ -52,28 +50,28 @@
                 android:id="@+id/assessmentItemStartLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Starts:" />
+                android:text="@string/starts_label" />
 
             <TextView
                 android:id="@+id/assessmentItemStartDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="TextView" />
+                android:text="@string/textview" />
 
             <TextView
                 android:id="@+id/assessmentItemEndLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:text="Ends:" />
+                android:text="@string/ends_label" />
 
             <TextView
                 android:id="@+id/assessmentItemEndDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="TextView" />
+                android:text="@string/textview" />
 
         </LinearLayout>
 

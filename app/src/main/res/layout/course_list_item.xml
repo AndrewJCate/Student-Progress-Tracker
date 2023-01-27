@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -11,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="TextView"
+        android:text="@string/textview"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,8 +19,8 @@
         android:id="@+id/courseItemStartLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:text="Starts:"
+        android:layout_marginStart="50dp"
+        android:text="@string/starts_label"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/courseItemTitle" />
 
@@ -30,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:text="TextView"
+        android:text="@string/textview"
         app:layout_constraintStart_toEndOf="@id/courseItemStartLabel"
         app:layout_constraintTop_toBottomOf="@+id/courseItemTitle" />
 
@@ -39,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:text="Ends:"
+        android:text="@string/ends_label"
         app:layout_constraintStart_toEndOf="@+id/courseItemStartDate"
         app:layout_constraintTop_toBottomOf="@+id/courseItemTitle" />
 
@@ -48,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:text="TextView"
+        android:text="@string/textview"
         app:layout_constraintStart_toEndOf="@+id/courseItemEndLabel"
         app:layout_constraintTop_toBottomOf="@+id/courseItemTitle" />
 
