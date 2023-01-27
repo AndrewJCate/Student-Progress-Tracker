@@ -133,6 +133,7 @@
 
             </LinearLayout>
 
+            <!-- Hardcoded right gravity to make it easier for right handed users to reach the Save button -->
             <LinearLayout
                 android:id="@+id/assessmentButtonLayout"
                 android:layout_width="match_parent"
@@ -140,7 +141,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
                 android:gravity="right"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="RtlHardcoded">
 
                 <LinearLayout
                     android:id="@+id/assessmentDeleteButtonLayout"

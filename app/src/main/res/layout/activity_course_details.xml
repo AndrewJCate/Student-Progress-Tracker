@@ -31,7 +31,7 @@
                     android:id="@+id/courseTitleLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Course Title:"
+                    android:text="@string/course_title_label"
                     android:textSize="16sp"
                     android:minWidth="48dp"/>
 
@@ -40,9 +40,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_marginStart="51dp"
-                    android:layout_weight="1"
-                    android:hint="Course Title"
-                    android:textColorHint="@color/light_grey"/>
+                    android:hint="@string/course_title"
+                    android:textColorHint="@color/light_grey"
+                    android:minWidth="48dp"
+                    android:autofillHints="text"
+                    android:inputType="text"/>
             </LinearLayout>
 
             <LinearLayout
@@ -56,7 +58,7 @@
                     android:id="@+id/courseStatusLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Course Status:"
+                    android:text="@string/course_status_label"
                     android:textSize="16sp" />
 
                 <!--                <EditText-->
@@ -72,7 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_marginStart="36dp"
-                    android:layout_weight="1" />
+                    android:contentDescription="@string/course_status" />
 
             </LinearLayout>
 
@@ -86,7 +88,7 @@
                     android:id="@+id/courseStartDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Course Start Date:"
+                    android:text="@string/course_start_date_label"
                     android:textSize="16sp" />
 
                 <EditText
@@ -94,14 +96,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_marginStart="10dp"
-                    android:layout_weight="1"
                     android:clickable="false"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:hint="Start Date"
+                    android:hint="@string/start_date"
                     android:textColorHint="@color/light_grey"
-                    android:minWidth="48dp" />
+                    android:minWidth="48dp"
+                    android:autofillHints="date"
+                    android:inputType="date" />
             </LinearLayout>
 
             <LinearLayout
@@ -114,7 +117,7 @@
                     android:id="@+id/courseEndDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Course End Date:"
+                    android:text="@string/course_end_date_label"
                     android:textSize="16sp" />
 
                 <EditText
@@ -122,14 +125,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_marginStart="18dp"
-                    android:layout_weight="1"
                     android:clickable="false"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:hint="End Date"
+                    android:hint="@string/end_date"
                     android:textColorHint="@color/light_grey"
-                    android:minWidth="48dp" />
+                    android:minWidth="48dp"
+                    android:autofillHints="date"
+                    android:inputType="date" />
 
             </LinearLayout>
 
@@ -138,7 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Instructor Information:"
+                android:text="@string/instructor_information_label"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -152,18 +156,20 @@
                     android:id="@+id/courseInstructorFirstNameLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="First Name:"
+                    android:text="@string/first_name_label"
                     android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/courseEditInstructorFirstName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="58dp"
                     android:layout_weight="1"
-                    android:hint="First Name"
+                    android:hint="@string/first_name"
                     android:textColorHint="@color/light_grey"
-                    android:minWidth="48dp"/>
+                    android:minWidth="48dp"
+                    android:autofillHints="personGivenName"
+                    android:inputType="textPersonName"/>
 
             </LinearLayout>
 
@@ -177,18 +183,20 @@
                     android:id="@+id/courseInstructorLastNameLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Last Name:"
+                    android:text="@string/last_name_label"
                     android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/courseEditInstructorLastName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="58dp"
                     android:layout_weight="1"
-                    android:hint="Last Name"
+                    android:hint="@string/last_name"
                     android:textColorHint="@color/light_grey"
-                    android:minWidth="48dp"/>
+                    android:minWidth="48dp"
+                    android:autofillHints="personFamilyName"
+                    android:inputType="textPersonName"/>
 
             </LinearLayout>
 
@@ -202,18 +210,20 @@
                     android:id="@+id/courseInstructorPhoneLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Phone Number:"
+                    android:text="@string/phone_number_label"
                     android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/courseEditInstructorPhone"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="30dp"
                     android:layout_weight="1"
-                    android:hint="123-456-7890"
+                    android:hint="@string/phone_number_placeholder"
                     android:textColorHint="@color/light_grey"
-                    android:minWidth="48dp"/>
+                    android:minWidth="48dp"
+                    android:autofillHints="phone number"
+                    android:inputType="phone"/>
 
             </LinearLayout>
 
@@ -227,18 +237,20 @@
                     android:id="@+id/courseInstructorEmailLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Email Address:"
+                    android:text="@string/email_address_label"
                     android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/courseEditInstructorEmail"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="34dp"
                     android:layout_weight="1"
-                    android:hint="example@domain.com"
+                    android:hint="@string/email_example"
                     android:textColorHint="@color/light_grey"
-                    android:minWidth="48dp"/>
+                    android:minWidth="48dp"
+                    android:autofillHints="emailAddress"
+                    android:inputType="textEmailAddress"/>
 
             </LinearLayout>
 
@@ -247,7 +259,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Course Notes:"
+                android:text="@string/course_notes_label"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -258,12 +270,14 @@
                 android:layout_marginEnd="10dp"
                 android:ems="10"
                 android:gravity="start|top"
-                android:hint="Notes"
+                android:hint="@string/notes"
                 android:textColorHint="@color/light_grey"
                 android:inputType="textMultiLine"
                 android:minHeight="48dp"
-                android:minWidth="48dp"/>
+                android:minWidth="48dp"
+                android:importantForAutofill="no" />
 
+            <!-- Hardcoded right gravity to make it easier for right handed users to reach the Save button -->
             <LinearLayout
                 android:id="@+id/courseButtonLayout"
                 android:layout_width="match_parent"
@@ -271,7 +285,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
                 android:gravity="right"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="RtlHardcoded">
 
                 <LinearLayout
                     android:id="@+id/courseDeleteButtonLayout"
@@ -297,10 +312,11 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="0dp"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_weight="1"
-                    android:text="Assessments:"
+                    android:text="@string/assessments_label"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -309,8 +325,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp" />
             </LinearLayout>
-
-
         </LinearLayout>
     </ScrollView>
 

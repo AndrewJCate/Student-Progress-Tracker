@@ -25,6 +25,24 @@
     <string name="term_end_date_label">Term End Date:</string>
     <string name="end_date">End Date</string>
     <string name="courses_label">Courses:</string>
+    <string name="course_status">course status</string>
+    <string name="course_title">Course Title</string>
+    <string name="course_title_label">Course Title:</string>
+    <string name="course_start_date_label">Course Start Date:</string>
+    <string name="course_end_date_label">Course End Date:</string>
+    <string name="instructor_information_label">Instructor Information:</string>
+    <string name="first_name_label">First Name:</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="last_name_label">Last Name:</string>
+    <string name="phone_number_label">Phone Number:</string>
+    <string name="phone_number_placeholder">123-456-7890</string>
+    <string name="email_address_label">Email Address:</string>
+    <string name="email_example">example@domain.com</string>
+    <string name="notes">Notes</string>
+    <string name="course_notes_label">Course Notes:</string>
+    <string name="assessments_label">Assessments:</string>
+    <string name="course_status_label">Course Status:</string>
     <string-array name="assessment_types">
         <item>Objective</item>
         <item>Performance</item>
