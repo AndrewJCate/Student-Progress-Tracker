@@ -36,13 +36,19 @@
     <string name="last_name">Last Name</string>
     <string name="last_name_label">Last Name:</string>
     <string name="phone_number_label">Phone Number:</string>
-    <string name="phone_number_placeholder">123-456-7890</string>
+    <string name="phone_number_placeholder">123–456–7890</string>
     <string name="email_address_label">Email Address:</string>
     <string name="email_example">example@domain.com</string>
     <string name="notes">Notes</string>
     <string name="course_notes_label">Course Notes:</string>
     <string name="assessments_label">Assessments:</string>
     <string name="course_status_label">Course Status:</string>
+    <string name="assessment_title_label">Assessment Title:</string>
+    <string name="assessment_title">Assessment Title</string>
+    <string name="assessment_type_label">Assessment Type:</string>
+    <string name="assessment_start_date_label">Assessment Start Date:</string>
+    <string name="assessment_end_date_label">Assessment End Date:</string>
+    <string name="assessment_type">assessment type</string>
     <string-array name="assessment_types">
         <item>Objective</item>
         <item>Performance</item>

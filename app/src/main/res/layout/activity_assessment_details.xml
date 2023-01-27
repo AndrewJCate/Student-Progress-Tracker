@@ -31,18 +31,20 @@
                     android:id="@+id/assessmentTitleLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Assessment Title:"
+                    android:text="@string/assessment_title_label"
                     android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/assessmentEditTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="51dp"
                     android:layout_weight="1"
-                    android:hint="Assessment Title"
+                    android:hint="@string/assessment_title"
                     android:textColorHint="@color/light_grey"
-                    android:minWidth="48dp"/>
+                    android:minWidth="48dp"
+                    android:autofillHints="text"
+                    android:inputType="text"/>
             </LinearLayout>
 
             <LinearLayout
@@ -56,7 +58,7 @@
                     android:id="@+id/assessmentTypeLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Assessment Type:"
+                    android:text="@string/assessment_type_label"
                     android:textSize="16sp" />
 
                 <!--                <EditText-->
@@ -69,10 +71,11 @@
 
                 <Spinner
                     android:id="@+id/assessmentTypeSpinner"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="47dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:contentDescription="@string/assessment_type" />
 
             </LinearLayout>
 
@@ -86,22 +89,24 @@
                     android:id="@+id/assessmentStartDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Assessment Start Date:"
+                    android:text="@string/assessment_start_date_label"
                     android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/assessmentEditStartDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
-                    android:hint="Start Date"
+                    android:hint="@string/start_date"
                     android:textColorHint="@color/light_grey"
                     android:clickable="false"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:minWidth="48dp" />
+                    android:minWidth="48dp"
+                    android:autofillHints="date"
+                    android:inputType="date"/>
             </LinearLayout>
 
             <LinearLayout
@@ -114,22 +119,24 @@
                     android:id="@+id/assessmentEndDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Assessment End Date:"
+                    android:text="@string/assessment_end_date_label"
                     android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/assessmentEditEndDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="18dp"
                     android:layout_weight="1"
-                    android:hint="End Date"
+                    android:hint="@string/end_date"
                     android:textColorHint="@color/light_grey"
                     android:clickable="false"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:minWidth="48dp" />
+                    android:minWidth="48dp"
+                    android:autofillHints="date"
+                    android:inputType="date"/>
 
             </LinearLayout>
 
