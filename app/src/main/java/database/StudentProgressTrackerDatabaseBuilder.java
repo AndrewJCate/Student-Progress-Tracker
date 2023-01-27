@@ -15,11 +15,12 @@ import entities.Term;
 
 @Database(entities = {Term.class, Course.class, Assessment.class}, version = 1, exportSchema = false)     // increment version everytime change entities
 public abstract class StudentProgressTrackerDatabaseBuilder extends RoomDatabase {
-    public abstract TermDao termDao();
-    public abstract CourseDao courseDao();
-    public abstract AssessmentDao assessmentDao();
 
     private static volatile StudentProgressTrackerDatabaseBuilder INSTANCE;
+
+    public abstract TermDao       termDao();
+    public abstract CourseDao     courseDao();
+    public abstract AssessmentDao assessmentDao();
 
     static StudentProgressTrackerDatabaseBuilder getDatabase(final Context context) {
         if(INSTANCE == null) {
