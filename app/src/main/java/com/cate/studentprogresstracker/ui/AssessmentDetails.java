@@ -161,42 +161,43 @@ public class AssessmentDetails extends AppCompatActivity {
             }
         });
 
-        // Add delete button
-        LinearLayout layout = findViewById(R.id.assessmentDeleteButtonLayout);
-        Button deleteButton = new MaterialButton(this);
-        deleteButton.setText(R.string.delete);
-        deleteButton.setBackgroundColor(getResources().getColor(R.color.dark_red, this.getTheme()));
-        layout.addView(deleteButton);
+        // Add delete button if not creating new assessment
+        if (assessmentId != -1) {
+            LinearLayout layout = findViewById(R.id.assessmentDeleteButtonLayout);
+            Button deleteButton = new MaterialButton(this);
+            deleteButton.setText(R.string.delete);
+            deleteButton.setBackgroundColor(getResources().getColor(R.color.dark_red, this.getTheme()));
+            layout.addView(deleteButton);
 
-        // Delete button clicked
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Delete confirmation dialog
-                new AlertDialog.Builder(AssessmentDetails.this)
-                        .setTitle("Delete Assessment")
-                        .setMessage("Are you sure you want to delete this assessment?")
-                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Delete approved
-                                for (Assessment assessment : repository.getAllAssessments()) {
-                                    if (assessment.getAssessmentId() == assessmentId) {
-                                        repository.delete(assessment);
-                                        Toast.makeText(AssessmentDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
-                                        return;
-                                        //TODO: return to previous screen
+            // Delete button clicked
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Delete confirmation dialog
+                    new AlertDialog.Builder(AssessmentDetails.this)
+                            .setTitle("Delete Assessment")
+                            .setMessage("Are you sure you want to delete this assessment?")
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Delete approved
+                                    for (Assessment assessment : repository.getAllAssessments()) {
+                                        if (assessment.getAssessmentId() == assessmentId) {
+                                            repository.delete(assessment);
+                                            Toast.makeText(AssessmentDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
+                                            return;
+                                            //TODO: return to previous screen
+                                        }
                                     }
+                                    // Not deleted
+                                    Toast.makeText(AssessmentDetails.this, "Assessment not found.", Toast.LENGTH_LONG).show();
                                 }
-                                // Not deleted
-                                Toast.makeText(AssessmentDetails.this, "Assessment not found.", Toast.LENGTH_LONG).show();
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, null)
-                        .show();
-            }
-        });
-
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
+                }
+            });
+        }
 
         // Display calendar when clicking on start date text view
         editStartDate.setOnClickListener(new View.OnClickListener() {

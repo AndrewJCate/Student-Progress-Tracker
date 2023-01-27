@@ -139,11 +139,11 @@ public class TermDetails extends AppCompatActivity {
         });
 
         // Add delete button
-        LinearLayout layout = findViewById(R.id.termDeleteButtonLayout);
+        LinearLayout deleteButtonLayout = findViewById(R.id.termDeleteButtonLayout);
         Button deleteButton = new MaterialButton(this);
         deleteButton.setText(R.string.delete);
         deleteButton.setBackgroundColor(getResources().getColor(R.color.dark_red, this.getTheme()));
-        layout.addView(deleteButton);
+        deleteButtonLayout.addView(deleteButton);
 
         // Delete button clicked
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -262,15 +262,23 @@ public class TermDetails extends AppCompatActivity {
         };
 
         fab = findViewById(R.id.termDetailsFab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(TermDetails.this, CourseDetails.class);
-                intent.putExtra("termId", termId);
-                startActivity(intent);
-            }
-        });
-
+        LinearLayout coursesLayout = findViewById(R.id.termCoursesLayout);
+        // Hides fab and Assessments views if creating new course
+        if (termId == -1) {
+            fab.setVisibility(View.GONE);
+            coursesLayout.setVisibility(View.GONE);
+            deleteButtonLayout.setVisibility(View.INVISIBLE);
+        }
+        else {  // Set click listener for fab if visible
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(TermDetails.this, CourseDetails.class);
+                    intent.putExtra("termId", termId);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     private void updateLabel(EditText editText, Calendar calendar) {

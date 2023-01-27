@@ -251,23 +251,23 @@ public class CourseDetails extends AppCompatActivity {
         });
 
         // Hides fab and Assessments views if creating new course
-        FloatingActionButton courseFab = findViewById(R.id.courseDetailsFab);
+        fab = findViewById(R.id.courseDetailsFab);
         LinearLayout assessmentsLayout = findViewById(R.id.courseDetailsAssessmentsLayout);
         if (courseId == -1) {
-            courseFab.setVisibility(View.GONE);
+            fab.setVisibility(View.GONE);
             assessmentsLayout.setVisibility(View.GONE);
             deleteButtonLayout.setVisibility(View.INVISIBLE);
         }
-
-        fab = findViewById(R.id.courseDetailsFab);  //TODO: redundant, fix this code so it only runs when needed
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CourseDetails.this, AssessmentDetails.class);
-                intent.putExtra("courseId", courseId);
-                startActivity(intent);
-            }
-        });
+        else {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(CourseDetails.this, AssessmentDetails.class);
+                    intent.putExtra("courseId", courseId);
+                    startActivity(intent);
+                }
+            });
+        }
 
         // Display calendar when clicking on start date text view
         editStartDate.setOnClickListener(new View.OnClickListener() {
