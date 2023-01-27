@@ -25,7 +25,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
     public CourseAdapter(Context context) {
         this.context = context;
-        mInflater = LayoutInflater.from(context);
+        this.mInflater = LayoutInflater.from(context);
     }
 
     @NonNull
@@ -66,9 +66,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
     class CourseViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView courseItemEndDate;
-        private final TextView courseItemStartDate;
         private final TextView courseItemTitle;
+        private final TextView courseItemStartDate;
+        private final TextView courseItemEndDate;
 
         private CourseViewHolder(View itemView) {
             super(itemView);

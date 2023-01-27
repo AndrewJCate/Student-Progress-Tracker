@@ -4,12 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import com.cate.studentprogresstracker.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -17,9 +14,9 @@ import database.Repository;
 import entities.Course;
 
 public class CourseList extends AppCompatActivity {
+    private CourseAdapter courseAdapter;
     private List<Course> allCourses;
     private Repository repository;
-    private CourseAdapter courseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +24,9 @@ public class CourseList extends AppCompatActivity {
         setContentView(R.layout.activity_course_list);
 
         RecyclerView recyclerView = findViewById(R.id.courseRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         courseAdapter = new CourseAdapter(this);
         recyclerView.setAdapter(courseAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         repository = new Repository(getApplication());
         allCourses = repository.getAllCourses();
         courseAdapter.setCourses(allCourses);

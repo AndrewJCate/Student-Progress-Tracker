@@ -25,7 +25,7 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
 
     public AssessmentAdapter(Context context) {
         this.context = context;
-        mInflater = LayoutInflater.from(context);
+        this.mInflater = LayoutInflater.from(context);
     }
 
     @NonNull

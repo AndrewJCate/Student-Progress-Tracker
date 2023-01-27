@@ -24,8 +24,8 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.TermViewHolder
     private List<Term> mTerms;
 
     public TermAdapter(Context context) {
-        mInflater = LayoutInflater.from(context);
         this.context = context;
+        this.mInflater = LayoutInflater.from(context);
     }
 
     @NonNull
