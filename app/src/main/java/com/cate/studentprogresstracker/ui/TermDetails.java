@@ -270,6 +270,7 @@ public class TermDetails extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
 
     private void updateLabel(EditText editText, Calendar calendar) {

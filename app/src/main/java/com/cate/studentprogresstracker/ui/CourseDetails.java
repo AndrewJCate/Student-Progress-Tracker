@@ -15,10 +15,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.cate.studentprogresstracker.R;
@@ -46,7 +49,7 @@ public class CourseDetails extends AppCompatActivity {
     private EditText editTitle;
     private EditText editEndDate;
     private EditText editStartDate;
-    private EditText editStatus;
+    private String editStatus;
     private EditText editInstructorFirstName;
     private EditText editInstructorLastName;
     private EditText editInstructorEmail;
@@ -75,11 +78,12 @@ public class CourseDetails extends AppCompatActivity {
         FloatingActionButton fab;
         String dateFormat;
         SimpleDateFormat sdf;
+        Spinner statusSpinner;
 
         editTitle = findViewById(R.id.courseEditTitle);
         editStartDate = findViewById(R.id.courseEditStartDate);
         editEndDate = findViewById(R.id.courseEditEndDate);
-        editStatus = findViewById(R.id.courseEditStatus);
+//        editStatus = findViewById(R.id.courseEditStatus);
         editInstructorFirstName = findViewById(R.id.courseEditInstructorFirstName);
         editInstructorLastName = findViewById(R.id.courseEditInstructorLastName);
         editInstructorEmail = findViewById(R.id.courseEditInstructorEmail);
@@ -104,7 +108,7 @@ public class CourseDetails extends AppCompatActivity {
 
         // Set existing values to display in text areas
         editTitle.setText(title);
-        editStatus.setText(status);
+//        editStatus.setText(status);
         editInstructorFirstName.setText(instructorFirstName);
         editInstructorLastName.setText(instructorLastName);
         editInstructorEmail.setText(instructorEmail);
@@ -135,6 +139,33 @@ public class CourseDetails extends AppCompatActivity {
             }
         }
         assessmentAdapter.setAssessments(filteredAssessments);
+
+        // Set spinner contents
+        statusSpinner = findViewById(R.id.courseStatusSpinner);
+        ArrayAdapter<CharSequence> courseArrayAdapter = ArrayAdapter.createFromResource(this, R.array.course_status, android.R.layout.simple_spinner_item);
+        courseArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        statusSpinner.setAdapter(courseArrayAdapter);
+
+        // Set spinner selection to match existing value
+        if (status == null) {
+            statusSpinner.setSelection(0);
+        }
+        else {
+            statusSpinner.setSelection(courseArrayAdapter.getPosition(status));
+        }
+
+        // Get spinner item when clicked
+        statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                editStatus = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
 
         // Add delete button
         LinearLayout deleteButtonLayout = findViewById(R.id.courseDeleteButtonLayout);
@@ -191,7 +222,7 @@ public class CourseDetails extends AppCompatActivity {
                             editTitle.getText().toString(),
                             editStartDate.getText().toString(),
                             editEndDate.getText().toString(),
-                            editStatus.getText().toString(),
+                            editStatus,
                             editInstructorLastName.getText().toString(),
                             editInstructorFirstName.getText().toString(),
                             editInstructorPhone.getText().toString(),
@@ -206,7 +237,7 @@ public class CourseDetails extends AppCompatActivity {
                             editTitle.getText().toString(),
                             editStartDate.getText().toString(),
                             editEndDate.getText().toString(),
-                            editStatus.getText().toString(),
+                            editStatus,
                             editInstructorLastName.getText().toString(),
                             editInstructorFirstName.getText().toString(),
                             editInstructorPhone.getText().toString(),
@@ -228,7 +259,7 @@ public class CourseDetails extends AppCompatActivity {
             deleteButtonLayout.setVisibility(View.INVISIBLE);
         }
 
-        fab = findViewById(R.id.courseDetailsFab);
+        fab = findViewById(R.id.courseDetailsFab);  //TODO: redundant, fix this code so it only runs when needed
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

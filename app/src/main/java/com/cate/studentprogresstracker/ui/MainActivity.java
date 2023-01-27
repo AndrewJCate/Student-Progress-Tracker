@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 // Sample data for db
                 Term term = new Term(0, "Current semester", "01/09/22", "02/28/23");
                 Course course = new Course(0, "Mobile App Development", "01/03/23",
-                        "01/31/23", "in progress", "Rogers",
+                        "01/31/23", "In progress", "Rogers",
                         "Fred", "1234567890", "example@school.edu", "notes go here",
                         1);
                 Assessment assessment = new Assessment(0, "ASMT 24-B",

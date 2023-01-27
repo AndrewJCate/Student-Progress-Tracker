@@ -22,4 +22,10 @@
         <item>Objective</item>
         <item>Performance</item>
     </string-array>
+    <string-array name="course_status">
+        <item>In progress</item>
+        <item>Completed</item>
+        <item>Plan to take</item>
+        <item>Dropped</item>
+    </string-array>
 </resources>

@@ -47,6 +47,7 @@
                 android:id="@+id/courseStatusLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
@@ -56,13 +57,20 @@
                     android:text="Course Status:"
                     android:textSize="16sp" />
 
-                <EditText
-                    android:id="@+id/courseEditStatus"
+                <!--                <EditText-->
+                <!--                    android:id="@+id/courseEditStatus"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="48dp"-->
+                <!--                    android:layout_marginStart="36dp"-->
+                <!--                    android:layout_weight="1"-->
+                <!--                    android:hint="in progress" />-->
+
+                <Spinner
+                    android:id="@+id/courseStatusSpinner"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_marginStart="36dp"
-                    android:layout_weight="1"
-                    android:hint="in progress" />
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
