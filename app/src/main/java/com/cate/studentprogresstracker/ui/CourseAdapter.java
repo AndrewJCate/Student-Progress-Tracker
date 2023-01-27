@@ -77,27 +77,24 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
             courseItemStartDate = itemView.findViewById(R.id.courseItemStartDate);
             courseItemEndDate   = itemView.findViewById(R.id.courseItemEndDate);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    final Course currentCourse = mCourses.get(position);
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                final Course currentCourse = mCourses.get(position);
 
-                    Intent intent = new Intent(context, CourseDetails.class);
-                    intent.putExtra("id", currentCourse.getCourseId());
-                    intent.putExtra("title", currentCourse.getCourseTitle());
-                    intent.putExtra("startDate", currentCourse.getCourseStartDate());
-                    intent.putExtra("endDate", currentCourse.getCourseEndDate());
-                    intent.putExtra("status", currentCourse.getCourseStatus());
-                    intent.putExtra("instructorLastName", currentCourse.getCourseInstructorLastName());
-                    intent.putExtra("instructorFirstName", currentCourse.getCourseInstructorFirstName());
-                    intent.putExtra("instructorPhoneNumber", currentCourse.getCourseInstructorPhoneNumber());
-                    intent.putExtra("instructorEmail", currentCourse.getCourseInstructorEmail());
-                    intent.putExtra("note", currentCourse.getCourseNote());
-                    intent.putExtra("termId", currentCourse.getTermId());
+                Intent intent = new Intent(context, CourseDetails.class);
+                intent.putExtra("id", currentCourse.getCourseId());
+                intent.putExtra("title", currentCourse.getCourseTitle());
+                intent.putExtra("startDate", currentCourse.getCourseStartDate());
+                intent.putExtra("endDate", currentCourse.getCourseEndDate());
+                intent.putExtra("status", currentCourse.getCourseStatus());
+                intent.putExtra("instructorLastName", currentCourse.getCourseInstructorLastName());
+                intent.putExtra("instructorFirstName", currentCourse.getCourseInstructorFirstName());
+                intent.putExtra("instructorPhoneNumber", currentCourse.getCourseInstructorPhoneNumber());
+                intent.putExtra("instructorEmail", currentCourse.getCourseInstructorEmail());
+                intent.putExtra("note", currentCourse.getCourseNote());
+                intent.putExtra("termId", currentCourse.getTermId());
 
-                    context.startActivity(intent);
-                }
+                context.startActivity(intent);
             });
         }
     }

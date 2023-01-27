@@ -39,8 +39,13 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.TermViewHolder
     public void onBindViewHolder(@NonNull TermAdapter.TermViewHolder holder, int position) {
         if(mTerms != null) {
             Term currentTerm = mTerms.get(position);
-            String title = currentTerm.getTermTitle();
+            String title     = currentTerm.getTermTitle();
+            String startDate = currentTerm.getTermStartDate();
+            String endDate   = currentTerm.getTermEndDate();
+
             holder.termItemView.setText(title);
+            holder.termItemStartDate.setText(startDate);
+            holder.termItemEndDate.setText(endDate);
         }
         else {
             holder.termItemView.setText(R.string.no_data);
@@ -60,24 +65,27 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.TermViewHolder
     class TermViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView termItemView;
+        private final TextView termItemStartDate;
+        private final TextView termItemEndDate;
 
         private TermViewHolder(View itemView) {
             super(itemView);
-            termItemView = itemView.findViewById(R.id.termItem1);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    final Term currentTerm = mTerms.get(position);
 
-                    Intent intent = new Intent(context, TermDetails.class);
-                    intent.putExtra("id", currentTerm.getTermId());
-                    intent.putExtra("title", currentTerm.getTermTitle());
-                    intent.putExtra("startDate", currentTerm.getTermStartDate());
-                    intent.putExtra("endDate", currentTerm.getTermEndDate());
+            termItemView      = itemView.findViewById(R.id.termItem1);
+            termItemStartDate = itemView.findViewById(R.id.termItemStartDate);
+            termItemEndDate   = itemView.findViewById(R.id.termItemEndDate);
 
-                    context.startActivity(intent);
-                }
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                final Term currentTerm = mTerms.get(position);
+
+                Intent intent = new Intent(context, TermDetails.class);
+                intent.putExtra("id", currentTerm.getTermId());
+                intent.putExtra("title", currentTerm.getTermTitle());
+                intent.putExtra("startDate", currentTerm.getTermStartDate());
+                intent.putExtra("endDate", currentTerm.getTermEndDate());
+
+                context.startActivity(intent);
             });
         }
     }

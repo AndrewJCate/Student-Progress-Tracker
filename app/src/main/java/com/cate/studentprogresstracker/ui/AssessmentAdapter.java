@@ -82,22 +82,19 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.As
             assessmentItemStartDate = itemView.findViewById(R.id.assessmentItemStartDate);
             assessmentItemEndDate   = itemView.findViewById(R.id.assessmentItemEndDate);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    final Assessment currentAssessment = mAssessments.get(position);
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                final Assessment currentAssessment = mAssessments.get(position);
 
-                    Intent intent = new Intent(context, AssessmentDetails.class);
-                    intent.putExtra("id", currentAssessment.getAssessmentId());
-                    intent.putExtra("title", currentAssessment.getAssessmentTitle());
-                    intent.putExtra("type", currentAssessment.getAssessmentType());
-                    intent.putExtra("startDate", currentAssessment.getAssessmentStartDate());
-                    intent.putExtra("endDate", currentAssessment.getAssessmentEndDate());
-                    intent.putExtra("courseId", currentAssessment.getCourseId());
+                Intent intent = new Intent(context, AssessmentDetails.class);
+                intent.putExtra("id", currentAssessment.getAssessmentId());
+                intent.putExtra("title", currentAssessment.getAssessmentTitle());
+                intent.putExtra("type", currentAssessment.getAssessmentType());
+                intent.putExtra("startDate", currentAssessment.getAssessmentStartDate());
+                intent.putExtra("endDate", currentAssessment.getAssessmentEndDate());
+                intent.putExtra("courseId", currentAssessment.getCourseId());
 
-                    context.startActivity(intent);
-                }
+                context.startActivity(intent);
             });
         }
     }
