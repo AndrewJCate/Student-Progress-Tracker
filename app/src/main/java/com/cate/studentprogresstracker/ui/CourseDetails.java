@@ -9,7 +9,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -35,6 +33,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import database.Repository;
 import entities.Assessment;
@@ -59,6 +58,8 @@ public class CourseDetails extends AppCompatActivity {
     private int termId;
     private DatePickerDialog.OnDateSetListener startDateDialog;
     private DatePickerDialog.OnDateSetListener endDateDialog;
+    private List<Assessment> filteredAssessments;
+    private AssessmentAdapter assessmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,11 +127,11 @@ public class CourseDetails extends AppCompatActivity {
         // Set list of assessments
         repository = new Repository(getApplication());
         recyclerView = findViewById(R.id.course_assessmentRecyclerView);
-        final AssessmentAdapter assessmentAdapter = new AssessmentAdapter(this);
+        assessmentAdapter = new AssessmentAdapter(this);
         recyclerView.setAdapter(assessmentAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Assessment> filteredAssessments = new ArrayList<>();
+        filteredAssessments = new ArrayList<>();
         for (Assessment assessment : repository.getAllAssessments()) {
             if (assessment.getCourseId() == courseId) {
                 filteredAssessments.add(assessment);
@@ -165,7 +166,6 @@ public class CourseDetails extends AppCompatActivity {
             }
         });
 
-
         // Add delete button if not creating a new course
         if (courseId != -1) {
             LinearLayout deleteButtonLayout = findViewById(R.id.courseDeleteButtonLayout);
@@ -175,50 +175,48 @@ public class CourseDetails extends AppCompatActivity {
             deleteButtonLayout.addView(deleteButton);
 
             // Delete button clicked
-            deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Delete confirmation dialog
-                    new AlertDialog.Builder(CourseDetails.this)
-                            .setTitle("Delete Course")
-                            .setMessage("Are you sure you want to delete this course?")
-                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    boolean isDeleted = false;
-                                    // Delete approved, look for course to delete
-                                    for (Course course : repository.getAllCourses()) {
+            deleteButton.setOnClickListener(v -> {
+                // Delete confirmation dialog
+                new AlertDialog.Builder(CourseDetails.this)
+                        .setTitle("Delete Course")
+                        .setMessage("Are you sure you want to delete this course?")
+                        .setPositiveButton(R.string.delete, (dialog, which) -> {
+                            boolean isDeleted = false;
+                            // Delete approved, look for course to delete
+                            for (Course course : repository.getAllCourses()) {
 
-                                        // Found course, deleting
-                                        if (course.getCourseId() == courseId) {
-                                            repository.delete(course);
-                                            isDeleted = true;
-                                            Toast.makeText(CourseDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
-                                            finish();
-                                        }
-                                    }
-                                    // Course not found, not deleted.
-                                    if (!isDeleted) {
-                                        Toast.makeText(CourseDetails.this, "Course not found.", Toast.LENGTH_LONG).show();
-                                    }
+                                // Found course, deleting
+                                if (course.getCourseId() == courseId) {
+                                    repository.delete(course);
+                                    isDeleted = true;
+                                    Toast.makeText(CourseDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
+                                    finish();
                                 }
-                            })
-                            .setNegativeButton(R.string.cancel, null)
-                            .show();
-                }
+                            }
+                            // Course not found, not deleted.
+                            if (!isDeleted) {
+                                Toast.makeText(CourseDetails.this, "Course not found.", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
             });
         }
 
         // Save button clicked
         Button saveButton = findViewById(R.id.courseSaveDetailsButton);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        saveButton.setOnClickListener(v -> {
+
+            // Check dates
+            if (CALENDAR_START.after(CALENDAR_END)) {
+                Toast.makeText(CourseDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
+            }
+            else {  // Dates ok
                 Course course;
 
                 // Set default title if left blank
                 if (editTitle.getText().toString().equals("")) {
-                    editTitle.setText("*blank*");
+                    editTitle.setText(R.string.blank);
                 }
 
                 // Create new Course object
@@ -266,81 +264,79 @@ public class CourseDetails extends AppCompatActivity {
             assessmentsLayout.setVisibility(View.GONE);
         }
         else {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(CourseDetails.this, AssessmentDetails.class);
-                    intent.putExtra("courseId", courseId);
-                    startActivity(intent);
-                }
+            fab.setOnClickListener(v -> {
+                Intent intent = new Intent(CourseDetails.this, AssessmentDetails.class);
+                intent.putExtra("courseId", courseId);
+                startActivity(intent);
             });
         }
 
         // Display calendar when clicking on start date text view
-        editStartDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    CALENDAR_START.setTime(sdf.parse(editStartDate.getText().toString()));
-                }
-                catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                new DatePickerDialog(
-                        CourseDetails.this,
-                        startDateDialog,
-                        CALENDAR_START.get(Calendar.YEAR),
-                        CALENDAR_START.get(Calendar.MONTH),
-                        CALENDAR_START.get(Calendar.DAY_OF_MONTH))
-                        .show();
+        editStartDate.setOnClickListener(v -> {
+            try {
+                CALENDAR_START.setTime(Objects.requireNonNull(sdf.parse(editStartDate.getText().toString())));
             }
+            catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            new DatePickerDialog(
+                    CourseDetails.this,
+                    startDateDialog,
+                    CALENDAR_START.get(Calendar.YEAR),
+                    CALENDAR_START.get(Calendar.MONTH),
+                    CALENDAR_START.get(Calendar.DAY_OF_MONTH))
+                    .show();
         });
 
         // Saves selected start date info from calendar
-        startDateDialog = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                CALENDAR_START.set(Calendar.YEAR, year);
-                CALENDAR_START.set(Calendar.MONTH, month);
-                CALENDAR_START.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        startDateDialog = (view, year, month, dayOfMonth) -> {
+            CALENDAR_START.set(Calendar.YEAR, year);
+            CALENDAR_START.set(Calendar.MONTH, month);
+            CALENDAR_START.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                updateLabel(editStartDate, CALENDAR_START);
-            }
+            updateLabel(editStartDate, CALENDAR_START);
         };
 
         // Display calendar when clicking on end date text view
-        editEndDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    CALENDAR_END.setTime(sdf.parse(editEndDate.getText().toString()));
-                }
-                catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                new DatePickerDialog(
-                        CourseDetails.this,
-                        endDateDialog,
-                        CALENDAR_END.get(Calendar.YEAR),
-                        CALENDAR_END.get(Calendar.MONTH),
-                        CALENDAR_END.get(Calendar.DAY_OF_MONTH))
-                        .show();
+        editEndDate.setOnClickListener(v -> {
+            try {
+                CALENDAR_END.setTime(Objects.requireNonNull(sdf.parse(editEndDate.getText().toString())));
             }
+            catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            new DatePickerDialog(
+                    CourseDetails.this,
+                    endDateDialog,
+                    CALENDAR_END.get(Calendar.YEAR),
+                    CALENDAR_END.get(Calendar.MONTH),
+                    CALENDAR_END.get(Calendar.DAY_OF_MONTH))
+                    .show();
         });
 
         // Saves selected end date info from calendar
-        endDateDialog = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                CALENDAR_END.set(Calendar.YEAR, year);
-                CALENDAR_END.set(Calendar.MONTH, month);
-                CALENDAR_END.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        endDateDialog = (view, year, month, dayOfMonth) -> {
+            CALENDAR_END.set(Calendar.YEAR, year);
+            CALENDAR_END.set(Calendar.MONTH, month);
+            CALENDAR_END.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                updateLabel(editEndDate, CALENDAR_END);
-            }
+            updateLabel(editEndDate, CALENDAR_END);
         };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        filteredAssessments = new ArrayList<>();
+        for (Assessment assessment : repository.getAllAssessments()) {
+            if (assessment.getCourseId() == courseId) {
+                filteredAssessments.add(assessment);
+            }
+        }
+        assessmentAdapter.setAssessments(filteredAssessments);
     }
 
     private void updateLabel(EditText editText, Calendar calendar) {
@@ -373,71 +369,73 @@ public class CourseDetails extends AppCompatActivity {
             // FIXME: triggers when back arrow is selected, want to trigger only when menu option is selected
         }
         else {
+            int itemId = item.getItemId();
 
-            switch (item.getItemId()) {
-                case R.id.shareCourseDetails:
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, editNote.getText().toString());
-                    sendIntent.putExtra(Intent.EXTRA_TITLE, editTitle.getText().toString() + " Notes");
-                    sendIntent.setType("text/plain");
+            if (itemId == R.id.shareCourseDetails) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, editNote.getText().toString());
+                sendIntent.putExtra(Intent.EXTRA_TITLE, editTitle.getText().toString() + " Notes");
+                sendIntent.setType("text/plain");
 
-                    Intent shareIntent = Intent.createChooser(sendIntent, null);
-                    startActivity(shareIntent);
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
 
-                    return true;
+                return true;
 
-                case R.id.courseNotifyStart:
-                    dateFromScreen = editStartDate.getText().toString();
-                    dateFormat = "MM/dd/yy";
-                    sdf = new SimpleDateFormat(dateFormat, Locale.US);
-                    date = null;
+            } else if (itemId == R.id.courseNotifyStart) {
+                dateFromScreen = editStartDate.getText().toString();
+                dateFormat = "MM/dd/yy";
+                sdf = new SimpleDateFormat(dateFormat, Locale.US);
+                date = null;
 
-                    try {
-                        date = sdf.parse(dateFromScreen);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    date = sdf.parse(dateFromScreen);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
-                    trigger = date.getTime();
+                assert date != null;
+                trigger = date.getTime();
 
-                    intent = new Intent(CourseDetails.this, MyReceiver.class);
-                    intent.putExtra("msg", "Course " + editTitle.getText().toString() + " starting.");
-                    pendingIntent = PendingIntent.getBroadcast(
-                            CourseDetails.this,
-                            ++MainActivity.alertNumber,
-                            intent,
-                            PendingIntent.FLAG_IMMUTABLE);
-                    alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+                intent = new Intent(CourseDetails.this, MyReceiver.class);
+                intent.putExtra("msg", "Course " + editTitle.getText().toString() + " starting.");
+                pendingIntent = PendingIntent.getBroadcast(
+                        CourseDetails.this,
+                        ++MainActivity.alertNumber,
+                        intent,
+                        PendingIntent.FLAG_IMMUTABLE);
+                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
 
-                    return true;
+                return true;
 
-                case R.id.courseNotifyEnd:
-                    dateFromScreen = editEndDate.getText().toString();
-                    dateFormat = "MM/dd/yy";
-                    sdf = new SimpleDateFormat(dateFormat, Locale.US);
-                    date = null;
+            } else if (itemId == R.id.courseNotifyEnd) {
+                dateFromScreen = editEndDate.getText().toString();
+                dateFormat = "MM/dd/yy";
+                sdf = new SimpleDateFormat(dateFormat, Locale.US);
+                date = null;
 
-                    try {
-                        date = sdf.parse(dateFromScreen);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    date = sdf.parse(dateFromScreen);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
-                    trigger = date.getTime();
+                assert date != null;
+                trigger = date.getTime();
 
-                    intent = new Intent(CourseDetails.this, MyReceiver.class);
-                    intent.putExtra("msg", "Course " + editTitle.getText().toString() + " ending.");
-                    pendingIntent = PendingIntent.getBroadcast(
-                            CourseDetails.this,
-                            ++MainActivity.alertNumber,
-                            intent,
-                            PendingIntent.FLAG_IMMUTABLE);
-                    alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+                intent = new Intent(CourseDetails.this, MyReceiver.class);
+                intent.putExtra("msg", "Course " + editTitle.getText().toString() + " ending.");
+                pendingIntent = PendingIntent.getBroadcast(
+                        CourseDetails.this,
+                        ++MainActivity.alertNumber,
+                        intent,
+                        PendingIntent.FLAG_IMMUTABLE);
+                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
 
-                    return true;
+                return true;
             }
         }
         return super.onOptionsItemSelected(item);

@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import database.Repository;
 import entities.Assessment;
@@ -66,7 +67,6 @@ public class AssessmentDetails extends AppCompatActivity {
         Spinner typeSpinner;
 
         editTitle = findViewById(R.id.assessmentEditTitle);
-//        editType = findViewById(R.id.assessmentEditType);
         editStartDate = findViewById(R.id.assessmentEditStartDate);
         editEndDate = findViewById(R.id.assessmentEditEndDate);
 
@@ -83,7 +83,6 @@ public class AssessmentDetails extends AppCompatActivity {
 
         // Set existing values to display in text areas
         editTitle.setText(title);
-//        editType.setText(type);
 
         // Set date fields to current date if adding new term
         if (assessmentId == -1) {
@@ -95,7 +94,7 @@ public class AssessmentDetails extends AppCompatActivity {
             editEndDate.setText(endDate);
         }
 
-        // Set spinner contents
+        // Set type spinner contents
         typeSpinner = findViewById(R.id.assessmentTypeSpinner);
         ArrayAdapter<CharSequence> assessmentArrayAdapter = ArrayAdapter.createFromResource(this, R.array.assessment_types, android.R.layout.simple_spinner_item);
         assessmentArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -129,36 +128,42 @@ public class AssessmentDetails extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Assessment assessment;
-
-                // Set default title if left blank
-                if (editTitle.getText().toString().equals("")) {
-                    editTitle.setText("*blank*");
+                // Check dates
+                if (CALENDAR_START.after(CALENDAR_END)) {
+                    Toast.makeText(AssessmentDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
                 }
+                else {  // Dates ok
+                    Assessment assessment;
 
-                // Create new Assessment
-                if (assessmentId == -1) {
-                    assessment = new Assessment(
-                            0,
-                            editTitle.getText().toString(),
-                            editType,
-                            editStartDate.getText().toString(),
-                            editEndDate.getText().toString(),
-                            courseId
-                    );
-                    repository.insert(assessment);
-                } else {  // Update existing Assessment object data
-                    assessment = new Assessment(
-                            assessmentId,
-                            editTitle.getText().toString(),
-                            editType,
-                            editStartDate.getText().toString(),
-                            editEndDate.getText().toString(),
-                            courseId
-                    );
-                    repository.update(assessment);
+                    // Set default title if left blank
+                    if (editTitle.getText().toString().trim().equals("")) {
+                        editTitle.setText(R.string.blank);
+                    }
+
+                    // Create new Assessment
+                    if (assessmentId == -1) {
+                        assessment = new Assessment(
+                                0,
+                                editTitle.getText().toString(),
+                                editType,
+                                editStartDate.getText().toString(),
+                                editEndDate.getText().toString(),
+                                courseId
+                        );
+                        repository.insert(assessment);
+                    } else {  // Update existing Assessment object data
+                        assessment = new Assessment(
+                                assessmentId,
+                                editTitle.getText().toString(),
+                                editType,
+                                editStartDate.getText().toString(),
+                                editEndDate.getText().toString(),
+                                courseId
+                        );
+                        repository.update(assessment);
+                    }
+                    finish();
                 }
-                finish();
             }
         });
 
@@ -209,7 +214,7 @@ public class AssessmentDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    CALENDAR_START.setTime(sdf.parse(editStartDate.getText().toString()));
+                    CALENDAR_START.setTime(Objects.requireNonNull(sdf.parse(editStartDate.getText().toString())));
                 }
                 catch (ParseException e) {
                     e.printStackTrace();
@@ -242,7 +247,7 @@ public class AssessmentDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    CALENDAR_END.setTime(sdf.parse(editEndDate.getText().toString()));
+                    CALENDAR_END.setTime(Objects.requireNonNull(sdf.parse(editEndDate.getText().toString())));
                 }
                 catch (ParseException e) {
                     e.printStackTrace();
@@ -287,74 +292,77 @@ public class AssessmentDetails extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
+        final String dateFormat = "MM/dd/yy";
+
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
         String dateFromScreen;
-        String dateFormat;
-        SimpleDateFormat sdf;
-        Date date;
+        Date date = null;
         long trigger;
         Intent intent;
         PendingIntent pendingIntent;
         AlarmManager alarmManager;
 
-        if (courseId == -1) {
-            Toast.makeText(AssessmentDetails.this, "Assessment does not exist. Please save first.", Toast.LENGTH_LONG).show();
-            // FIXME: triggers when back arrow is selected, want to trigger only when menu option is selected
-        }
-        else {
-            switch (item.getItemId()) {
-                case R.id.assessmentNotifyStart:
-                    dateFromScreen = editStartDate.getText().toString();
-                    dateFormat = "MM/dd/yy";
-                    sdf = new SimpleDateFormat(dateFormat, Locale.US);
-                    date = null;
-
-                    try {
-                        date = sdf.parse(dateFromScreen);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    trigger = date.getTime();
-
-                    intent = new Intent(AssessmentDetails.this, MyReceiver.class);
-                    intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " starting.");
-                    pendingIntent = PendingIntent.getBroadcast(
-                            AssessmentDetails.this,
-                            ++MainActivity.alertNumber,
-                            intent,
-                            PendingIntent.FLAG_IMMUTABLE);
-                    alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
-
-                    return true;
-
-                case R.id.assessmentNotifyEnd:
-                    dateFromScreen = editEndDate.getText().toString();
-                    dateFormat = "MM/dd/yy";
-                    sdf = new SimpleDateFormat(dateFormat, Locale.US);
-                    date = null;
-
-                    try {
-                        date = sdf.parse(dateFromScreen);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    trigger = date.getTime();
-
-                    intent = new Intent(AssessmentDetails.this, MyReceiver.class);
-                    intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " ending.");
-                    pendingIntent = PendingIntent.getBroadcast(
-                            AssessmentDetails.this,
-                            ++MainActivity.alertNumber,
-                            intent,
-                            PendingIntent.FLAG_IMMUTABLE);
-                    alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
-
-                    return true;
+        if (item.getItemId() == R.id.assessmentNotifyStart) {
+            // Don't create reminder if assessment does not exist
+            if (assessmentId == -1) {
+                Toast.makeText(AssessmentDetails.this, "Assessment does not exist. Please save first.", Toast.LENGTH_LONG).show();
+                // FIXME: is there a way to make this more general?
             }
+            else {
+                dateFromScreen = editStartDate.getText().toString();
+
+                try {
+                    date = sdf.parse(dateFromScreen);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                assert date != null;
+                trigger = date.getTime();
+
+                intent = new Intent(AssessmentDetails.this, MyReceiver.class);
+                intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " starting.");
+                pendingIntent = PendingIntent.getBroadcast(
+                        AssessmentDetails.this,
+                        ++MainActivity.alertNumber,
+                        intent,
+                        PendingIntent.FLAG_IMMUTABLE);
+                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+            }
+            return true;
         }
+        else if (item.getItemId() ==  R.id.assessmentNotifyEnd) {
+            // Don't create reminder if assessment does not exist
+            if (assessmentId == -1) {
+                Toast.makeText(AssessmentDetails.this, "Assessment does not exist. Please save first.", Toast.LENGTH_LONG).show();
+                // FIXME: is there a way to make this more general?
+            }
+            else {
+                dateFromScreen = editEndDate.getText().toString();
+
+                try {
+                    date = sdf.parse(dateFromScreen);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                assert date != null;
+                trigger = date.getTime();
+
+                intent = new Intent(AssessmentDetails.this, MyReceiver.class);
+                intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " ending.");
+                pendingIntent = PendingIntent.getBroadcast(
+                        AssessmentDetails.this,
+                        ++MainActivity.alertNumber,
+                        intent,
+                        PendingIntent.FLAG_IMMUTABLE);
+                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+            }
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 }

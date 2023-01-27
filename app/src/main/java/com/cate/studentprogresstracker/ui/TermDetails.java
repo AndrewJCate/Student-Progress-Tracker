@@ -32,6 +32,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import database.Repository;
 import entities.Assessment;
@@ -112,33 +113,40 @@ public class TermDetails extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Term term;
-
-                // Set default title if left blank
-                if (editTitle.getText().toString().equals("")) {
-                    editTitle.setText("*blank*");
+                // Check dates
+                if (CALENDAR_START.after(CALENDAR_END)) {
+                    Toast.makeText(TermDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
+                    // FIXME: weird interaction with equal dates
                 }
+                else {  // Dates ok
+                    Term term;
 
-                // Create new Term object
-                if (termId == -1) {
-                    term = new Term(
-                            0,
-                            editTitle.getText().toString(),
-                            editStartDate.getText().toString(),
-                            editEndDate.getText().toString()
-                    );
-                    repository.insert(term);
-                } else {  // Update existing Term object data
-                    term = new Term(
-                            termId,
-                            editTitle.getText().toString(),
-                            editStartDate.getText().toString(),
-                            editEndDate.getText().toString()
-                    );
-                    repository.update(term);
+                    // Set default title if left blank
+                    if (editTitle.getText().toString().equals("")) {
+                        editTitle.setText(R.string.blank);
+                    }
+
+                    // Create new Term object
+                    if (termId == -1) {
+                        term = new Term(
+                                0,
+                                editTitle.getText().toString(),
+                                editStartDate.getText().toString(),
+                                editEndDate.getText().toString()
+                        );
+                        repository.insert(term);
+                    } else {  // Update existing Term object data
+                        term = new Term(
+                                termId,
+                                editTitle.getText().toString(),
+                                editStartDate.getText().toString(),
+                                editEndDate.getText().toString()
+                        );
+                        repository.update(term);
+                    }
+
+                    finish();
                 }
-
-                finish();
             }
         });
 
@@ -207,7 +215,7 @@ public class TermDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    CALENDAR_START.setTime(sdf.parse(editStartDate.getText().toString()));
+                    CALENDAR_START.setTime(Objects.requireNonNull(sdf.parse(editStartDate.getText().toString())));
                 }
                 catch (ParseException e) {
                     e.printStackTrace();
@@ -240,7 +248,7 @@ public class TermDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    CALENDAR_END.setTime(sdf.parse(editEndDate.getText().toString()));
+                    CALENDAR_END.setTime(Objects.requireNonNull(sdf.parse(editEndDate.getText().toString())));
                 }
                 catch (ParseException e) {
                     e.printStackTrace();

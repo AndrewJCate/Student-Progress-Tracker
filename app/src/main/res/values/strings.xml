@@ -12,6 +12,7 @@
     <string name="assessment_type">assessment type</string>
     <string name="assessment_type_label">Assessment Type:</string>
     <string name="assessments_label">Assessments:</string>
+    <string name="blank">-blank-</string>
     <string name="button_text_assessments">assessments</string>
     <string name="button_text_courses">courses</string>
     <string name="button_text_terms">terms</string>
@@ -52,6 +53,7 @@
     <string name="starts_label">Starts:</string>
     <string name="ends_label">Ends:</string>
     <string name="type_label">Type:</string>
+    <string name="delete_all_courses">Delete All Courses</string>
     <string-array name="assessment_types">
         <item>Objective</item>
         <item>Performance</item>
