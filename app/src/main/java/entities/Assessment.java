@@ -7,20 +7,20 @@ import androidx.room.PrimaryKey;
 public class Assessment {
 
     @PrimaryKey(autoGenerate = true)
-    private int assessmentId;
+    private int    assessmentId;
     private String assessmentTitle;
     private String assessmentType;          // performance, objective
     private String assessmentStartDate;     // mm-dd-yyyy
     private String assessmentEndDate;       // mm-dd-yyyy
-    private int courseId;
+    private int    courseId;
 
     public Assessment(int assessmentId, String assessmentTitle, String assessmentType, String assessmentStartDate, String assessmentEndDate, int courseId) {
-        this.assessmentId = assessmentId;
-        this.assessmentTitle = assessmentTitle;
-        this.assessmentType = assessmentType;
+        this.assessmentId        = assessmentId;
+        this.assessmentTitle     = assessmentTitle;
+        this.assessmentType      = assessmentType;
         this.assessmentStartDate = assessmentStartDate;
-        this.assessmentEndDate = assessmentEndDate;
-        this.courseId = courseId;
+        this.assessmentEndDate   = assessmentEndDate;
+        this.courseId            = courseId;
     }
 
     public Assessment() {
