@@ -158,6 +158,7 @@ public class AssessmentDetails extends AppCompatActivity {
                     );
                     repository.update(assessment);
                 }
+                finish();
             }
         });
 
@@ -181,16 +182,20 @@ public class AssessmentDetails extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     // Delete approved
+                                    boolean isDeleted = false;
+
                                     for (Assessment assessment : repository.getAllAssessments()) {
                                         if (assessment.getAssessmentId() == assessmentId) {
                                             repository.delete(assessment);
+                                            isDeleted = true;
                                             Toast.makeText(AssessmentDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
-                                            return;
-                                            //TODO: return to previous screen
+                                            finish();
                                         }
                                     }
                                     // Not deleted
-                                    Toast.makeText(AssessmentDetails.this, "Assessment not found.", Toast.LENGTH_LONG).show();
+                                    if (!isDeleted) {
+                                        Toast.makeText(AssessmentDetails.this, "Assessment not found.", Toast.LENGTH_LONG).show();
+                                    }
                                 }
                             })
                             .setNegativeButton(R.string.cancel, null)
@@ -286,63 +291,69 @@ public class AssessmentDetails extends AppCompatActivity {
         String dateFormat;
         SimpleDateFormat sdf;
         Date date;
-        Long trigger;
+        long trigger;
         Intent intent;
         PendingIntent pendingIntent;
         AlarmManager alarmManager;
 
-        switch (item.getItemId()) {
-            case R.id.assessmentNotifyStart:
-                dateFromScreen = editStartDate.getText().toString();
-                dateFormat = "MM/dd/yy";
-                sdf = new SimpleDateFormat(dateFormat, Locale.US);
-                date = null;
+        if (courseId == -1) {
+            Toast.makeText(AssessmentDetails.this, "Assessment does not exist. Please save first.", Toast.LENGTH_LONG).show();
+            // FIXME: triggers when back arrow is selected, want to trigger only when menu option is selected
+        }
+        else {
+            switch (item.getItemId()) {
+                case R.id.assessmentNotifyStart:
+                    dateFromScreen = editStartDate.getText().toString();
+                    dateFormat = "MM/dd/yy";
+                    sdf = new SimpleDateFormat(dateFormat, Locale.US);
+                    date = null;
 
-                try {
-                    date = sdf.parse(dateFromScreen);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                    try {
+                        date = sdf.parse(dateFromScreen);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
 
-                trigger = date.getTime();
+                    trigger = date.getTime();
 
-                intent = new Intent(AssessmentDetails.this, MyReceiver.class);
-                intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " starting.");
-                pendingIntent = PendingIntent.getBroadcast(
-                        AssessmentDetails.this,
-                        ++MainActivity.alertNumber,
-                        intent,
-                        PendingIntent.FLAG_IMMUTABLE);
-                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+                    intent = new Intent(AssessmentDetails.this, MyReceiver.class);
+                    intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " starting.");
+                    pendingIntent = PendingIntent.getBroadcast(
+                            AssessmentDetails.this,
+                            ++MainActivity.alertNumber,
+                            intent,
+                            PendingIntent.FLAG_IMMUTABLE);
+                    alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
 
-                return true;
+                    return true;
 
-            case R.id.assessmentNotifyEnd:
-                dateFromScreen = editEndDate.getText().toString();
-                dateFormat = "MM/dd/yy";
-                sdf = new SimpleDateFormat(dateFormat, Locale.US);
-                date = null;
+                case R.id.assessmentNotifyEnd:
+                    dateFromScreen = editEndDate.getText().toString();
+                    dateFormat = "MM/dd/yy";
+                    sdf = new SimpleDateFormat(dateFormat, Locale.US);
+                    date = null;
 
-                try {
-                    date = sdf.parse(dateFromScreen);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                    try {
+                        date = sdf.parse(dateFromScreen);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
 
-                trigger = date.getTime();
+                    trigger = date.getTime();
 
-                intent = new Intent(AssessmentDetails.this, MyReceiver.class);
-                intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " ending.");
-                pendingIntent = PendingIntent.getBroadcast(
-                        AssessmentDetails.this,
-                        ++MainActivity.alertNumber,
-                        intent,
-                        PendingIntent.FLAG_IMMUTABLE);
-                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+                    intent = new Intent(AssessmentDetails.this, MyReceiver.class);
+                    intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " ending.");
+                    pendingIntent = PendingIntent.getBroadcast(
+                            AssessmentDetails.this,
+                            ++MainActivity.alertNumber,
+                            intent,
+                            PendingIntent.FLAG_IMMUTABLE);
+                    alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
 
-                return true;
+                    return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }

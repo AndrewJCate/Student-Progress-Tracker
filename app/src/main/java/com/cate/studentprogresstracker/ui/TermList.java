@@ -17,52 +17,35 @@ import database.Repository;
 import entities.Term;
 
 public class TermList extends AppCompatActivity {
+    private List<Term> allTerms;
     private Repository repository;
+    private TermAdapter termAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        final TermAdapter    termAdapter;
-
-        FloatingActionButton fab;
-        List<Term>           allTerms;
-        RecyclerView         recyclerView;
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term_list);
 
-        recyclerView = findViewById(R.id.term_courseRecyclerView);
+        RecyclerView recyclerView = findViewById(R.id.term_courseRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         termAdapter = new TermAdapter(this);
         recyclerView.setAdapter(termAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         repository = new Repository(getApplication());
         allTerms = repository.getAllTerms();
         termAdapter.setTerms(allTerms);
 
-        fab = findViewById(R.id.floatingActionAddTermButton);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(TermList.this, TermDetails.class);
-                startActivity(intent);
-            }
+        FloatingActionButton fab = findViewById(R.id.floatingActionAddTermButton);
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(TermList.this, TermDetails.class);
+            startActivity(intent);
         });
     }
 
     @Override
     protected void onResume() {
-        final TermAdapter termAdapter;
-
-        List<Term> allTerms;
-        RecyclerView recyclerView;
-
         super.onResume();
 
-        allTerms     = repository.getAllTerms();
-        recyclerView = findViewById(R.id.term_courseRecyclerView);
-        termAdapter  = new TermAdapter(this );
-
-        recyclerView.setAdapter(termAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        allTerms = repository.getAllTerms();
         termAdapter.setTerms(allTerms);
     }
 }

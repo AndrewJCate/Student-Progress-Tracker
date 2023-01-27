@@ -83,7 +83,6 @@ public class CourseDetails extends AppCompatActivity {
         editTitle = findViewById(R.id.courseEditTitle);
         editStartDate = findViewById(R.id.courseEditStartDate);
         editEndDate = findViewById(R.id.courseEditEndDate);
-//        editStatus = findViewById(R.id.courseEditStatus);
         editInstructorFirstName = findViewById(R.id.courseEditInstructorFirstName);
         editInstructorLastName = findViewById(R.id.courseEditInstructorLastName);
         editInstructorEmail = findViewById(R.id.courseEditInstructorEmail);
@@ -108,7 +107,6 @@ public class CourseDetails extends AppCompatActivity {
 
         // Set existing values to display in text areas
         editTitle.setText(title);
-//        editStatus.setText(status);
         editInstructorFirstName.setText(instructorFirstName);
         editInstructorLastName.setText(instructorLastName);
         editInstructorEmail.setText(instructorEmail);
@@ -167,41 +165,49 @@ public class CourseDetails extends AppCompatActivity {
             }
         });
 
-        // Add delete button
-        LinearLayout deleteButtonLayout = findViewById(R.id.courseDeleteButtonLayout);
-        Button deleteButton = new MaterialButton(this);
-        deleteButton.setText(R.string.delete);
-        deleteButton.setBackgroundColor(getResources().getColor(R.color.dark_red, this.getTheme()));
-        deleteButtonLayout.addView(deleteButton);
 
-        // Delete button clicked
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Delete confirmation dialog
-                new AlertDialog.Builder(CourseDetails.this)
-                        .setTitle("Delete Course")
-                        .setMessage("Are you sure you want to delete this course?")
-                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Delete approved
-                                for (Course course : repository.getAllCourses()) {
-                                    if (course.getCourseId() == courseId) {
-                                        repository.delete(course);
-                                        Toast.makeText(CourseDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
-                                        return;
-                                        // TODO: return to previous screen
+        // Add delete button if not creating a new course
+        if (courseId != -1) {
+            LinearLayout deleteButtonLayout = findViewById(R.id.courseDeleteButtonLayout);
+            Button deleteButton = new MaterialButton(this);
+            deleteButton.setText(R.string.delete);
+            deleteButton.setBackgroundColor(getResources().getColor(R.color.dark_red, this.getTheme()));
+            deleteButtonLayout.addView(deleteButton);
+
+            // Delete button clicked
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Delete confirmation dialog
+                    new AlertDialog.Builder(CourseDetails.this)
+                            .setTitle("Delete Course")
+                            .setMessage("Are you sure you want to delete this course?")
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    boolean isDeleted = false;
+                                    // Delete approved, look for course to delete
+                                    for (Course course : repository.getAllCourses()) {
+
+                                        // Found course, deleting
+                                        if (course.getCourseId() == courseId) {
+                                            repository.delete(course);
+                                            isDeleted = true;
+                                            Toast.makeText(CourseDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
+                                            finish();
+                                        }
+                                    }
+                                    // Course not found, not deleted.
+                                    if (!isDeleted) {
+                                        Toast.makeText(CourseDetails.this, "Course not found.", Toast.LENGTH_LONG).show();
                                     }
                                 }
-                                // Not deleted
-                                Toast.makeText(CourseDetails.this, "Course not found.", Toast.LENGTH_LONG).show();
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, null)
-                        .show();
-            }
-        });
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
+                }
+            });
+        }
 
         // Save button clicked
         Button saveButton = findViewById(R.id.courseSaveDetailsButton);
@@ -247,6 +253,8 @@ public class CourseDetails extends AppCompatActivity {
                     );
                     repository.update(course);
                 }
+
+                finish();
             }
         });
 
@@ -256,7 +264,6 @@ public class CourseDetails extends AppCompatActivity {
         if (courseId == -1) {
             fab.setVisibility(View.GONE);
             assessmentsLayout.setVisibility(View.GONE);
-            deleteButtonLayout.setVisibility(View.INVISIBLE);
         }
         else {
             fab.setOnClickListener(new View.OnClickListener() {
@@ -356,75 +363,82 @@ public class CourseDetails extends AppCompatActivity {
         String dateFormat;
         SimpleDateFormat sdf;
         Date date;
-        Long trigger;
+        long trigger;
         Intent intent;
         PendingIntent pendingIntent;
         AlarmManager alarmManager;
 
-        switch (item.getItemId()) {
-            case R.id.shareCourseDetails:
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, editNote.getText().toString());
-                sendIntent.putExtra(Intent.EXTRA_TITLE, editTitle.getText().toString() + " Notes");
-                sendIntent.setType("text/plain");
+        if (courseId == -1) {
+            Toast.makeText(CourseDetails.this, "Course does not exist. Please save first.", Toast.LENGTH_LONG).show();
+            // FIXME: triggers when back arrow is selected, want to trigger only when menu option is selected
+        }
+        else {
 
-                Intent shareIntent = Intent.createChooser(sendIntent, null);
-                startActivity(shareIntent);
+            switch (item.getItemId()) {
+                case R.id.shareCourseDetails:
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, editNote.getText().toString());
+                    sendIntent.putExtra(Intent.EXTRA_TITLE, editTitle.getText().toString() + " Notes");
+                    sendIntent.setType("text/plain");
 
-                return true;
+                    Intent shareIntent = Intent.createChooser(sendIntent, null);
+                    startActivity(shareIntent);
 
-            case R.id.courseNotifyStart:
-                dateFromScreen = editStartDate.getText().toString();
-                dateFormat = "MM/dd/yy";
-                sdf = new SimpleDateFormat(dateFormat, Locale.US);
-                date = null;
+                    return true;
 
-                try {
-                    date = sdf.parse(dateFromScreen);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                case R.id.courseNotifyStart:
+                    dateFromScreen = editStartDate.getText().toString();
+                    dateFormat = "MM/dd/yy";
+                    sdf = new SimpleDateFormat(dateFormat, Locale.US);
+                    date = null;
 
-                trigger = date.getTime();
+                    try {
+                        date = sdf.parse(dateFromScreen);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
 
-                intent = new Intent(CourseDetails.this, MyReceiver.class);
-                intent.putExtra("msg", "Course " + editTitle.getText().toString() + " starting.");
-                pendingIntent = PendingIntent.getBroadcast(
-                        CourseDetails.this,
-                        ++MainActivity.alertNumber,
-                        intent,
-                        PendingIntent.FLAG_IMMUTABLE);
-                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+                    trigger = date.getTime();
 
-                return true;
+                    intent = new Intent(CourseDetails.this, MyReceiver.class);
+                    intent.putExtra("msg", "Course " + editTitle.getText().toString() + " starting.");
+                    pendingIntent = PendingIntent.getBroadcast(
+                            CourseDetails.this,
+                            ++MainActivity.alertNumber,
+                            intent,
+                            PendingIntent.FLAG_IMMUTABLE);
+                    alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
 
-            case R.id.courseNotifyEnd:
-                dateFromScreen = editEndDate.getText().toString();
-                dateFormat = "MM/dd/yy";
-                sdf = new SimpleDateFormat(dateFormat, Locale.US);
-                date = null;
+                    return true;
 
-                try {
-                    date = sdf.parse(dateFromScreen);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                case R.id.courseNotifyEnd:
+                    dateFromScreen = editEndDate.getText().toString();
+                    dateFormat = "MM/dd/yy";
+                    sdf = new SimpleDateFormat(dateFormat, Locale.US);
+                    date = null;
 
-                trigger = date.getTime();
+                    try {
+                        date = sdf.parse(dateFromScreen);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
 
-                intent = new Intent(CourseDetails.this, MyReceiver.class);
-                intent.putExtra("msg", "Course " + editTitle.getText().toString() + " ending.");
-                pendingIntent = PendingIntent.getBroadcast(
-                        CourseDetails.this,
-                        ++MainActivity.alertNumber,
-                        intent,
-                        PendingIntent.FLAG_IMMUTABLE);
-                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+                    trigger = date.getTime();
 
-                return true;
+                    intent = new Intent(CourseDetails.this, MyReceiver.class);
+                    intent.putExtra("msg", "Course " + editTitle.getText().toString() + " ending.");
+                    pendingIntent = PendingIntent.getBroadcast(
+                            CourseDetails.this,
+                            ++MainActivity.alertNumber,
+                            intent,
+                            PendingIntent.FLAG_IMMUTABLE);
+                    alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+
+                    return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }

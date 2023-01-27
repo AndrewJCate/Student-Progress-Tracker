@@ -17,33 +17,28 @@ import database.Repository;
 import entities.Course;
 
 public class CourseList extends AppCompatActivity {
+    private List<Course> allCourses;
+    private Repository repository;
+    private CourseAdapter courseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        FloatingActionButton fab;
-        List<Course> allCourses;
-        RecyclerView recyclerView;
-        Repository repository;
-        CourseAdapter courseAdapter;
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_list);
 
-        recyclerView = findViewById(R.id.courseRecyclerView);
+        RecyclerView recyclerView = findViewById(R.id.courseRecyclerView);
         courseAdapter = new CourseAdapter(this);
         recyclerView.setAdapter(courseAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         repository = new Repository(getApplication());
         allCourses = repository.getAllCourses();
         courseAdapter.setCourses(allCourses);
+    }
 
-//        fab = findViewById(R.id.floatingActionAddCourseButton);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(CourseList.this, CourseDetails.class);
-//                startActivity(intent);
-//            }
-//        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        allCourses = repository.getAllCourses();
+        courseAdapter.setCourses(allCourses);
     }
 }

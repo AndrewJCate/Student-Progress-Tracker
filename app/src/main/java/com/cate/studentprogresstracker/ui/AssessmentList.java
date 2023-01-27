@@ -17,22 +17,29 @@ import database.Repository;
 import entities.Assessment;
 
 public class AssessmentList extends AppCompatActivity {
+    List<Assessment> allAssessments;
+    Repository repository;
+    AssessmentAdapter assessmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        List<Assessment> allAssessments;
-        RecyclerView recyclerView;
-        Repository repository;
-        AssessmentAdapter assessmentAdapter;
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assessment_list);
 
-        recyclerView = findViewById(R.id.assessmentRecyclerView);
+        RecyclerView recyclerView = findViewById(R.id.assessmentRecyclerView);
         assessmentAdapter = new AssessmentAdapter(this);
         recyclerView.setAdapter(assessmentAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         repository = new Repository(getApplication());
+        allAssessments = repository.getAllAssessments();
+        assessmentAdapter.setAssessments(allAssessments);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         allAssessments = repository.getAllAssessments();
         assessmentAdapter.setAssessments(allAssessments);
     }

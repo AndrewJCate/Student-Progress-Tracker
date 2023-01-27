@@ -50,6 +50,8 @@ public class TermDetails extends AppCompatActivity {
     private Repository repository;
     private DatePickerDialog.OnDateSetListener startDateDialog;
     private DatePickerDialog.OnDateSetListener endDateDialog;
+    private CourseAdapter courseAdapter;
+    private List<Course> filteredCourses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +95,11 @@ public class TermDetails extends AppCompatActivity {
         // Set list of courses
         repository = new Repository(getApplication());
         recyclerView = findViewById(R.id.term_courseRecyclerView);
-        final CourseAdapter courseAdapter = new CourseAdapter(this);
+        courseAdapter = new CourseAdapter(this);
         recyclerView.setAdapter(courseAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Course> filteredCourses = new ArrayList<>();
+        filteredCourses = new ArrayList<>();
         for (Course course : repository.getAllCourses()) {
             if (course.getTermId() == termId) {
                 filteredCourses.add(course);
@@ -135,6 +137,8 @@ public class TermDetails extends AppCompatActivity {
                     );
                     repository.update(term);
                 }
+
+                finish();
             }
         });
 
@@ -150,6 +154,7 @@ public class TermDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Term currentTerm = null;
+                boolean courseFound = false;
 
                 // Find current term
                 for (Term term : repository.getAllTerms()) {
@@ -160,12 +165,32 @@ public class TermDetails extends AppCompatActivity {
 
                         // Find any associated courses
                         for (Course course : repository.getAllCourses()) {
-
                             // Term has associated courses
                             if (course.getTermId() == termId) {
+                                courseFound = true;
                                 Toast.makeText(TermDetails.this, "Cannot delete term with courses. Remove courses before deleting term.", Toast.LENGTH_LONG).show();
-                                return;
+                                break;
                             }
+                        }
+
+                        if (!courseFound) {
+                            // Term found and no associated courses
+                            // Delete confirmation dialog
+                            Term finalCurrentTerm = currentTerm;
+                            new AlertDialog.Builder(TermDetails.this)
+                                    .setTitle("Delete Term")
+                                    .setMessage("Are you sure you want to delete this term?")
+                                    .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // Delete approved
+                                            repository.delete(finalCurrentTerm);
+                                            Toast.makeText(TermDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
+                                            finish();
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.cancel, null)
+                                    .show();
                         }
                     }
                 }
@@ -173,24 +198,6 @@ public class TermDetails extends AppCompatActivity {
                 // Term not found
                 if (currentTerm == null) {
                     Toast.makeText(TermDetails.this, "Term not found.", Toast.LENGTH_LONG).show();
-                }
-                else {  // Term found and no associated courses
-                    // Delete confirmation dialog
-                    Term finalCurrentTerm = currentTerm;
-                    new AlertDialog.Builder(TermDetails.this)
-                            .setTitle("Delete Term")
-                            .setMessage("Are you sure you want to delete this term?")
-                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // Delete approved
-                                    repository.delete(finalCurrentTerm);
-                                    Toast.makeText(TermDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
-                                    //TODO: return to previous screen
-                                }
-                            })
-                            .setNegativeButton(R.string.cancel, null)
-                            .show();
                 }
             }
         });
@@ -281,6 +288,19 @@ public class TermDetails extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        filteredCourses = new ArrayList<>();
+        for (Course course : repository.getAllCourses()) {
+            if (course.getTermId() == termId) {
+                filteredCourses.add(course);
+            }
+        }
+        courseAdapter.setCourses(filteredCourses);
+    }
+
     private void updateLabel(EditText editText, Calendar calendar) {
         String dateFormat;
         SimpleDateFormat sdf;
@@ -299,36 +319,46 @@ public class TermDetails extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.deleteCourses:
-                new AlertDialog.Builder(TermDetails.this)
-                        .setTitle("Delete All Courses")
-                        .setMessage("Are you sure you want to delete ALL courses associated with this term?")
-                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Boolean isDeleted = false;
+
+                // Determine if there are courses listed
+                boolean hasCourses = false;
+                for (Course course : repository.getAllCourses()) {
+
+                    // Term has associated courses
+                    if (course.getTermId() == termId) {
+                        hasCourses = true;
+                        break;
+                    }
+                }
+
+                if (!hasCourses) {
+                    Toast.makeText(TermDetails.this, "No courses to delete.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    new AlertDialog.Builder(TermDetails.this)
+                            .setTitle("Delete All Courses")
+                            .setMessage("Are you sure you want to delete ALL courses associated with this term?")
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                 // Delete approved
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                                // Find any associated courses
-                                for (Course course : repository.getAllCourses()) {
+                                    // Find all associated courses
+                                    for (Course course : repository.getAllCourses()) {
 
-                                    // Term has associated courses
-                                    if (course.getTermId() == termId) {
-                                        repository.delete(course);
-                                        isDeleted = true;
+                                        // Term has associated courses
+                                        if (course.getTermId() == termId) {
+                                            repository.delete(course);
+                                        }
                                     }
-                                }
 
-                                if (isDeleted) {
                                     Toast.makeText(TermDetails.this, "All associated courses deleted.", Toast.LENGTH_LONG).show();
+                                    onResume();
                                 }
-                                else {
-                                    Toast.makeText(TermDetails.this, "No courses to delete.", Toast.LENGTH_LONG).show();
-                                }
-                                // TODO: refresh screen
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, null)
-                        .show();
+                            })
+                            .setNegativeButton(R.string.cancel, null)   // Delete not approved
+                            .show();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
