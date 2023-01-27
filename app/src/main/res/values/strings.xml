@@ -18,6 +18,13 @@
     <string name="app_title">Student Progress Tracker</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="term_title_label">Term Title:</string>
+    <string name="term_title">Term Title</string>
+    <string name="term_start_date_label">Term Start Date:</string>
+    <string name="start_date">Start Date</string>
+    <string name="term_end_date_label">Term End Date:</string>
+    <string name="end_date">End Date</string>
+    <string name="courses_label">Courses:</string>
     <string-array name="assessment_types">
         <item>Objective</item>
         <item>Performance</item>

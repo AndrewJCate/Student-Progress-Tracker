@@ -40,7 +40,9 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="51dp"
                     android:layout_weight="1"
-                    android:hint="assessment title" />
+                    android:hint="Assessment Title"
+                    android:textColorHint="@color/light_grey"
+                    android:minWidth="48dp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -93,11 +95,13 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
+                    android:hint="Start Date"
+                    android:textColorHint="@color/light_grey"
                     android:clickable="false"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:hint="start date" />
+                    android:minWidth="48dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -119,11 +123,13 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="18dp"
                     android:layout_weight="1"
+                    android:hint="End Date"
+                    android:textColorHint="@color/light_grey"
                     android:clickable="false"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:hint="end date" />
+                    android:minWidth="48dp" />
 
             </LinearLayout>
 

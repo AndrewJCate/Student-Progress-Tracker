@@ -31,16 +31,20 @@
                     android:id="@+id/termTitleLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Term Title:"
+                    android:text="@string/term_title_label"
                     android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/termEditTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_weight="1"
                     android:layout_marginStart="51dp"
-                    android:hint="term title" />
+                    android:hint="@string/term_title"
+                    android:textColorHint="@color/light_grey"
+                    android:minWidth="48dp"
+                    android:autofillHints="text"
+                    android:inputType="text" />
             </LinearLayout>
 
             <LinearLayout
@@ -53,20 +57,24 @@
                     android:id="@+id/termStartDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Term Start Date:"
+                    android:text="@string/term_start_date_label"
                     android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/termEditStartDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="48dp"
-                    android:layout_weight="1"
                     android:layout_marginStart="10dp"
-                    android:hint="start date"
+                    android:layout_weight="1"
                     android:clickable="false"
+                    android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:cursorVisible="false"/>
+                    android:hint="@string/start_date"
+                    android:textColorHint="@color/light_grey"
+                    android:minWidth="48dp"
+                    android:autofillHints="date"
+                    android:inputType="date" />
             </LinearLayout>
 
             <LinearLayout
@@ -79,23 +87,28 @@
                     android:id="@+id/termEndDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Term End Date:"
+                    android:text="@string/term_end_date_label"
                     android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/termEditEndDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="48dp"
-                    android:layout_weight="1"
                     android:layout_marginStart="18dp"
-                    android:hint="end date"
+                    android:layout_weight="1"
                     android:clickable="false"
+                    android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:cursorVisible="false"/>
+                    android:hint="@string/end_date"
+                    android:textColorHint="@color/light_grey"
+                    android:minWidth="48dp"
+                    android:autofillHints="date"
+                    android:inputType="date"/>
 
             </LinearLayout>
 
+            <!-- Hardcoded right gravity to make it easier for right handed users to reach the Save button -->
             <LinearLayout
                 android:id="@+id/termButtonLayout"
                 android:layout_width="match_parent"
@@ -103,7 +116,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
                 android:gravity="right"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="RtlHardcoded" >
 
                 <LinearLayout
                     android:id="@+id/termDeleteButtonLayout"
@@ -130,17 +144,16 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_marginTop="20dp"
-                    android:layout_weight="1"
-                    android:text="Courses:"
+                    android:text="@string/courses_label"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/term_courseRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp" />
+                    android:layout_height="380dp" />
             </LinearLayout>
 
 
@@ -157,7 +170,7 @@
         android:contentDescription="@string/add_term"
         android:src="@drawable/ic_add_48"
         android:tint="@color/white"
-        app:backgroundTint="@color/blue_200"
+        app:backgroundTint="@color/steel_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="36dp"
