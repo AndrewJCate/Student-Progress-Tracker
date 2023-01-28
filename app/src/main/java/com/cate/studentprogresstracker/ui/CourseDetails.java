@@ -325,7 +325,10 @@ public class CourseDetails extends AppCompatActivity {
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.course_details_menu, menu);
+        // Don't display menu if creating new course
+        if (courseId != -1) {
+            getMenuInflater().inflate(R.menu.course_details_menu, menu);
+        }
         return true;
     }
 
@@ -336,89 +339,76 @@ public class CourseDetails extends AppCompatActivity {
         PendingIntent pendingIntent;
         AlarmManager alarmManager;
 
-        // FIXME: Extract courseId check if possible
-
         int itemId = item.getItemId();
-
-//      TODO  android.R.id.home
 
         // Share Course Details option
         if (itemId == R.id.shareCourseDetails) {
-            if (courseId == -1) {
-                Toast.makeText(CourseDetails.this, "Course does not exist. Please save first.", Toast.LENGTH_LONG).show();
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, editNote.getText().toString());
+            sendIntent.putExtra(Intent.EXTRA_TITLE, editTitle.getText().toString() + " Notes");
+            sendIntent.setType("text/plain");
+
+            Intent shareIntent = Intent.createChooser(sendIntent, null);
+            startActivity(shareIntent);
+
+            return true;
+
+        }   // Notify Start option
+        else if (itemId == R.id.courseNotifyStart) {
+            dateFromScreen = editStartDate.getText().toString();
+            date = null;
+
+            try {
+                date = SDF.parse(dateFromScreen);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-            else {
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, editNote.getText().toString());
-                sendIntent.putExtra(Intent.EXTRA_TITLE, editTitle.getText().toString() + " Notes");
-                sendIntent.setType("text/plain");
 
-                Intent shareIntent = Intent.createChooser(sendIntent, null);
-                startActivity(shareIntent);
+            assert date != null;
+            trigger = date.getTime();
 
-                return true;
+            Intent notifyStartIntent = new Intent(CourseDetails.this, MyReceiver.class);
+            notifyStartIntent.putExtra("msg", "Course " + editTitle.getText().toString() + " starting.");
+            pendingIntent = PendingIntent.getBroadcast(
+                    CourseDetails.this,
+                    ++MainActivity.alertNumber,
+                    notifyStartIntent,
+                    PendingIntent.FLAG_IMMUTABLE);
+            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+
+            Toast.makeText(CourseDetails.this, "Notification set.", Toast.LENGTH_LONG).show();
+
+            return true;
+
+        }   // Notify End option
+        else if (itemId == R.id.courseNotifyEnd) {
+            dateFromScreen = editEndDate.getText().toString();
+            date = null;
+
+            try {
+                date = SDF.parse(dateFromScreen);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-        } else if (itemId == R.id.courseNotifyStart) {  // Notify Start option
-            if (courseId == -1) {
-                Toast.makeText(CourseDetails.this, "Course does not exist. Please save first.", Toast.LENGTH_LONG).show();
-            }
-            else {
-                dateFromScreen = editStartDate.getText().toString();
-                date = null;
 
-                try {
-                    date = SDF.parse(dateFromScreen);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+            assert date != null;
+            trigger = date.getTime();
 
-                assert date != null;
-                trigger = date.getTime();
+            Intent notifyEndIntent = new Intent(CourseDetails.this, MyReceiver.class);
+            notifyEndIntent.putExtra("msg", "Course " + editTitle.getText().toString() + " ending.");
+            pendingIntent = PendingIntent.getBroadcast(
+                    CourseDetails.this,
+                    ++MainActivity.alertNumber,
+                    notifyEndIntent,
+                    PendingIntent.FLAG_IMMUTABLE);
+            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
 
-                Intent notifyStartIntent = new Intent(CourseDetails.this, MyReceiver.class);
-                notifyStartIntent.putExtra("msg", "Course " + editTitle.getText().toString() + " starting.");
-                pendingIntent = PendingIntent.getBroadcast(
-                        CourseDetails.this,
-                        ++MainActivity.alertNumber,
-                        notifyStartIntent,
-                        PendingIntent.FLAG_IMMUTABLE);
-                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+            Toast.makeText(CourseDetails.this, "Notification set.", Toast.LENGTH_LONG).show();
 
-                // TODO: Add toast
-
-                return true;
-            }
-        } else if (itemId == R.id.courseNotifyEnd) {    // Notify End option
-            if (courseId == -1) {
-                Toast.makeText(CourseDetails.this, "Course does not exist. Please save first.", Toast.LENGTH_LONG).show();
-            }
-            else {
-                dateFromScreen = editEndDate.getText().toString();
-                date = null;
-
-                try {
-                    date = SDF.parse(dateFromScreen);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                assert date != null;
-                trigger = date.getTime();
-
-                Intent notifyEndIntent = new Intent(CourseDetails.this, MyReceiver.class);
-                notifyEndIntent.putExtra("msg", "Course " + editTitle.getText().toString() + " ending.");
-                pendingIntent = PendingIntent.getBroadcast(
-                        CourseDetails.this,
-                        ++MainActivity.alertNumber,
-                        notifyEndIntent,
-                        PendingIntent.FLAG_IMMUTABLE);
-                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
-
-                return true;
-            }
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

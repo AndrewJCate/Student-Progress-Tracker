@@ -273,7 +273,10 @@ public class TermDetails extends AppCompatActivity {
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.term_details_menu, menu);
+        // Don't display menu if creating new course
+        if (termId != -1) {
+            getMenuInflater().inflate(R.menu.term_details_menu, menu);
+        }
         return true;
     }
 

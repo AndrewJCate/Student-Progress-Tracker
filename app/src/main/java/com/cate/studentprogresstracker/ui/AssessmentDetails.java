@@ -245,7 +245,10 @@ public class AssessmentDetails extends AppCompatActivity {
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.assessment_details_menu, menu);
+        // Don't display menu if creating new course
+        if (assessmentId != -1) {
+            getMenuInflater().inflate(R.menu.assessment_details_menu, menu);
+        }
         return true;
     }
 
@@ -258,63 +261,55 @@ public class AssessmentDetails extends AppCompatActivity {
         AlarmManager alarmManager;
 
         if (item.getItemId() == R.id.assessmentNotifyStart) {
-            // Don't create reminder if assessment does not exist
-            if (assessmentId == -1) {
-                Toast.makeText(AssessmentDetails.this, "Assessment does not exist. Please save first.", Toast.LENGTH_LONG).show();
-                // FIXME: is there a way to make this more general?
+            dateFromScreen = editStartDate.getText().toString();
+
+            try {
+                date = SDF.parse(dateFromScreen);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-            else {
-                dateFromScreen = editStartDate.getText().toString();
 
-                try {
-                    date = SDF.parse(dateFromScreen);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+            assert date != null;
+            trigger = date.getTime();
 
-                assert date != null;
-                trigger = date.getTime();
+            intent = new Intent(AssessmentDetails.this, MyReceiver.class);
+            intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " starting.");
+            pendingIntent = PendingIntent.getBroadcast(
+                    AssessmentDetails.this,
+                    ++MainActivity.alertNumber,
+                    intent,
+                    PendingIntent.FLAG_IMMUTABLE);
+            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
 
-                intent = new Intent(AssessmentDetails.this, MyReceiver.class);
-                intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " starting.");
-                pendingIntent = PendingIntent.getBroadcast(
-                        AssessmentDetails.this,
-                        ++MainActivity.alertNumber,
-                        intent,
-                        PendingIntent.FLAG_IMMUTABLE);
-                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
-            }
+            Toast.makeText(AssessmentDetails.this, "Notification set.", Toast.LENGTH_LONG).show();
+
             return true;
         }
         else if (item.getItemId() ==  R.id.assessmentNotifyEnd) {
-            // Don't create reminder if assessment does not exist
-            if (assessmentId == -1) {
-                Toast.makeText(AssessmentDetails.this, "Assessment does not exist. Please save first.", Toast.LENGTH_LONG).show();
-                // FIXME: is there a way to make this more general?
+            dateFromScreen = editEndDate.getText().toString();
+
+            try {
+                date = SDF.parse(dateFromScreen);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-            else {
-                dateFromScreen = editEndDate.getText().toString();
 
-                try {
-                    date = SDF.parse(dateFromScreen);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+            assert date != null;
+            trigger = date.getTime();
 
-                assert date != null;
-                trigger = date.getTime();
+            intent = new Intent(AssessmentDetails.this, MyReceiver.class);
+            intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " ending.");
+            pendingIntent = PendingIntent.getBroadcast(
+                    AssessmentDetails.this,
+                    ++MainActivity.alertNumber,
+                    intent,
+                    PendingIntent.FLAG_IMMUTABLE);
+            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
 
-                intent = new Intent(AssessmentDetails.this, MyReceiver.class);
-                intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " ending.");
-                pendingIntent = PendingIntent.getBroadcast(
-                        AssessmentDetails.this,
-                        ++MainActivity.alertNumber,
-                        intent,
-                        PendingIntent.FLAG_IMMUTABLE);
-                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
-            }
+            Toast.makeText(AssessmentDetails.this, "Notification set.", Toast.LENGTH_LONG).show();
+
             return true;
         }
         return super.onOptionsItemSelected(item);
