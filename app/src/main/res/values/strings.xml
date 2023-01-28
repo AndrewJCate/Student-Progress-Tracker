@@ -33,7 +33,7 @@
     <string name="end_date">End Date</string>
     <string name="first_name">First Name</string>
     <string name="first_name_label">First Name:</string>
-    <string name="get_started_instructions">Choose from the options below to get started.</string>
+    <string name="get_started_instructions">Choose from the options to get started.</string>
     <string name="instructor_information_label">Instructor Information:</string>
     <string name="last_name">Last Name</string>
     <string name="last_name_label">Last Name:</string>
