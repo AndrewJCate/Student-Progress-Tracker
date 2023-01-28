@@ -7,7 +7,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -27,11 +25,8 @@ import com.google.android.material.button.MaterialButton;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -40,45 +35,36 @@ import entities.Assessment;
 
 public class AssessmentDetails extends AppCompatActivity {
 
+    private final Calendar CALENDAR_END   = Calendar.getInstance();
     private final Calendar CALENDAR_START = Calendar.getInstance();
-    private final Calendar CALENDAR_END = Calendar.getInstance();
+    private final String   DATE_FORMAT    = "MM/dd/yy";
+    private final SimpleDateFormat SDF    = new SimpleDateFormat(DATE_FORMAT, Locale.US);
 
-    private int assessmentId;
-    private EditText editTitle;
-    private String editType;
+    private int      assessmentId;
+    private int      courseId;
     private EditText editEndDate;
     private EditText editStartDate;
-    private Repository repository;
-    private int courseId;
-    private DatePickerDialog.OnDateSetListener startDateDialog;
+    private EditText editTitle;
+    private String   editType;
     private DatePickerDialog.OnDateSetListener endDateDialog;
+    private Repository repository;
+    private DatePickerDialog.OnDateSetListener startDateDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assessment_details);
 
-        String title;
-        String type;
-        String startDate;
-        String endDate;
-        String dateFormat;
-        SimpleDateFormat sdf;
-        Spinner typeSpinner;
-
-        editTitle = findViewById(R.id.assessmentEditTitle);
+        editTitle     = findViewById(R.id.assessmentEditTitle);
         editStartDate = findViewById(R.id.assessmentEditStartDate);
-        editEndDate = findViewById(R.id.assessmentEditEndDate);
-
-        dateFormat = "MM/dd/yy";
-        sdf = new SimpleDateFormat(dateFormat, Locale.US);
+        editEndDate   = findViewById(R.id.assessmentEditEndDate);
 
         // Get current values of selected term if any
         assessmentId = getIntent().getIntExtra("id", -1);
-        title = getIntent().getStringExtra("title");
-        type = getIntent().getStringExtra("type");
-        startDate = getIntent().getStringExtra("startDate");
-        endDate = getIntent().getStringExtra("endDate");
+        String title = getIntent().getStringExtra("title");
+        String type  = getIntent().getStringExtra("type");
+        String startDate = getIntent().getStringExtra("startDate");
+        String endDate   = getIntent().getStringExtra("endDate");
         courseId = getIntent().getIntExtra("courseId", -1);
 
         // Set existing values to display in text areas
@@ -86,8 +72,8 @@ public class AssessmentDetails extends AppCompatActivity {
 
         // Set date fields to current date if adding new term
         if (assessmentId == -1) {
-            editStartDate.setText(sdf.format(new Date()));
-            editEndDate.setText(sdf.format(new Date()));
+            editStartDate.setText(SDF.format(new Date()));
+            editEndDate.setText(SDF.format(new Date()));
         }
         else {
             editStartDate.setText(startDate);
@@ -95,7 +81,7 @@ public class AssessmentDetails extends AppCompatActivity {
         }
 
         // Set type spinner contents
-        typeSpinner = findViewById(R.id.assessmentTypeSpinner);
+        Spinner typeSpinner = findViewById(R.id.assessmentTypeSpinner);
         ArrayAdapter<CharSequence> assessmentArrayAdapter = ArrayAdapter.createFromResource(this, R.array.assessment_types, android.R.layout.simple_spinner_item);
         assessmentArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeSpinner.setAdapter(assessmentArrayAdapter);
@@ -127,10 +113,10 @@ public class AssessmentDetails extends AppCompatActivity {
         Button saveButton = findViewById(R.id.assessmentSaveDetailsButton);
         saveButton.setOnClickListener(v -> {
             // Check dates
-            if (CALENDAR_START.after(CALENDAR_END)) {
-                Toast.makeText(AssessmentDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
-            }
-            else {  // Dates ok
+//            if (CALENDAR_START.after(CALENDAR_END)) {
+//                Toast.makeText(AssessmentDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
+//            }
+//            else {  // Dates ok
                 Assessment assessment;
 
                 // Set default title if left blank
@@ -161,7 +147,7 @@ public class AssessmentDetails extends AppCompatActivity {
                     repository.update(assessment);
                 }
                 finish();
-            }
+//            }
         });
 
         // Add delete button if not creating new assessment
@@ -203,7 +189,7 @@ public class AssessmentDetails extends AppCompatActivity {
         // Display calendar when clicking on start date text view
         editStartDate.setOnClickListener(v -> {
             try {
-                CALENDAR_START.setTime(Objects.requireNonNull(sdf.parse(editStartDate.getText().toString())));
+                CALENDAR_START.setTime(Objects.requireNonNull(SDF.parse(editStartDate.getText().toString())));
             }
             catch (ParseException e) {
                 e.printStackTrace();
@@ -224,13 +210,13 @@ public class AssessmentDetails extends AppCompatActivity {
             CALENDAR_START.set(Calendar.MONTH, month);
             CALENDAR_START.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            updateLabel(editStartDate, CALENDAR_START);
+            editStartDate.setText(SDF.format(CALENDAR_START.getTime()));
         };
 
         // Display calendar when clicking on end date text view
         editEndDate.setOnClickListener(v -> {
             try {
-                CALENDAR_END.setTime(Objects.requireNonNull(sdf.parse(editEndDate.getText().toString())));
+                CALENDAR_END.setTime(Objects.requireNonNull(SDF.parse(editEndDate.getText().toString())));
             }
             catch (ParseException e) {
                 e.printStackTrace();
@@ -251,18 +237,8 @@ public class AssessmentDetails extends AppCompatActivity {
             CALENDAR_END.set(Calendar.MONTH, month);
             CALENDAR_END.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            updateLabel(editEndDate, CALENDAR_END);
+            editEndDate.setText(SDF.format(CALENDAR_END.getTime()));
         };
-    }
-
-    private void updateLabel(EditText editText, Calendar calendar) {
-        String dateFormat;
-        SimpleDateFormat sdf;
-
-        dateFormat = "MM/dd/yy";
-        sdf = new SimpleDateFormat(dateFormat, Locale.US);
-
-        editText.setText(sdf.format(calendar.getTime()));
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -271,9 +247,6 @@ public class AssessmentDetails extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        final String dateFormat = "MM/dd/yy";
-
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
         String dateFromScreen;
         Date date = null;
         long trigger;
@@ -291,7 +264,7 @@ public class AssessmentDetails extends AppCompatActivity {
                 dateFromScreen = editStartDate.getText().toString();
 
                 try {
-                    date = sdf.parse(dateFromScreen);
+                    date = SDF.parse(dateFromScreen);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -321,7 +294,7 @@ public class AssessmentDetails extends AppCompatActivity {
                 dateFromScreen = editEndDate.getText().toString();
 
                 try {
-                    date = sdf.parse(dateFromScreen);
+                    date = SDF.parse(dateFromScreen);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -341,7 +314,6 @@ public class AssessmentDetails extends AppCompatActivity {
             }
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

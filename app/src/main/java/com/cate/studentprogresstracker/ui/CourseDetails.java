@@ -41,70 +41,54 @@ import entities.Course;
 
 public class CourseDetails extends AppCompatActivity {
 
+    private final Calendar CALENDAR_END   = Calendar.getInstance();
     private final Calendar CALENDAR_START = Calendar.getInstance();
-    private final Calendar CALENDAR_END = Calendar.getInstance();
+    private final String   DATE_FORMAT    = "MM/dd/yy";
+    private final SimpleDateFormat SDF    = new SimpleDateFormat(DATE_FORMAT, Locale.US);
 
+    private AssessmentAdapter assessmentAdapter;
     private int courseId;
-    private EditText editTitle;
     private EditText editEndDate;
-    private EditText editStartDate;
-    private String editStatus;
+    private EditText editInstructorEmail;
     private EditText editInstructorFirstName;
     private EditText editInstructorLastName;
-    private EditText editInstructorEmail;
     private EditText editInstructorPhone;
     private EditText editNote;
-    private Repository repository;
-    private int termId;
-    private DatePickerDialog.OnDateSetListener startDateDialog;
+    private EditText editStartDate;
+    private String   editStatus;
+    private EditText editTitle;
     private DatePickerDialog.OnDateSetListener endDateDialog;
     private List<Assessment> filteredAssessments;
-    private AssessmentAdapter assessmentAdapter;
+    private Repository repository;
+    private DatePickerDialog.OnDateSetListener startDateDialog;
+    private int termId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_details);
 
-        RecyclerView recyclerView;
-        String title;
-        String startDate;
-        String endDate;
-        String status;
-        String instructorFirstName;
-        String instructorLastName;
-        String instructorPhone;
-        String instructorEmail;
-        String note;
-        FloatingActionButton fab;
-        String dateFormat;
-        SimpleDateFormat sdf;
-        Spinner statusSpinner;
-
-        editTitle = findViewById(R.id.courseEditTitle);
-        editStartDate = findViewById(R.id.courseEditStartDate);
-        editEndDate = findViewById(R.id.courseEditEndDate);
+        editTitle               = findViewById(R.id.courseEditTitle);
+        editStartDate           = findViewById(R.id.courseEditStartDate);
+        editEndDate             = findViewById(R.id.courseEditEndDate);
         editInstructorFirstName = findViewById(R.id.courseEditInstructorFirstName);
-        editInstructorLastName = findViewById(R.id.courseEditInstructorLastName);
-        editInstructorEmail = findViewById(R.id.courseEditInstructorEmail);
-        editInstructorPhone = findViewById(R.id.courseEditInstructorPhone);
-        editNote = findViewById(R.id.courseEditNotes);
-
-        dateFormat = "MM/dd/yy";
-        sdf = new SimpleDateFormat(dateFormat, Locale.US);
+        editInstructorLastName  = findViewById(R.id.courseEditInstructorLastName);
+        editInstructorEmail     = findViewById(R.id.courseEditInstructorEmail);
+        editInstructorPhone     = findViewById(R.id.courseEditInstructorPhone);
+        editNote                = findViewById(R.id.courseEditNotes);
 
         // Get current values of selected course if any
-        courseId = getIntent().getIntExtra("id", -1);
-        title = getIntent().getStringExtra("title");
-        startDate = getIntent().getStringExtra("startDate");
-        endDate = getIntent().getStringExtra("endDate");
-        status = getIntent().getStringExtra("status");
-        instructorFirstName = getIntent().getStringExtra("instructorLastName");
-        instructorLastName = getIntent().getStringExtra("instructorFirstName");
-        instructorPhone = getIntent().getStringExtra("instructorPhoneNumber");
-        instructorEmail = getIntent().getStringExtra("instructorEmail");
-        note = getIntent().getStringExtra("note");
-        termId = getIntent().getIntExtra("termId", -1);
+        courseId         = getIntent().getIntExtra("id", -1);
+        String title     = getIntent().getStringExtra("title");
+        String startDate = getIntent().getStringExtra("startDate");
+        String endDate   = getIntent().getStringExtra("endDate");
+        String status    = getIntent().getStringExtra("status");
+        String instructorFirstName = getIntent().getStringExtra("instructorLastName");
+        String instructorLastName  = getIntent().getStringExtra("instructorFirstName");
+        String instructorPhone     = getIntent().getStringExtra("instructorPhoneNumber");
+        String instructorEmail     = getIntent().getStringExtra("instructorEmail");
+        String note = getIntent().getStringExtra("note");
+        termId      = getIntent().getIntExtra("termId", -1);
 
         // Set existing values to display in text areas
         editTitle.setText(title);
@@ -116,17 +100,17 @@ public class CourseDetails extends AppCompatActivity {
 
         // Set date fields to current date if adding new term
         if (courseId == -1) {
-            editStartDate.setText(sdf.format(new Date()));
-            editEndDate.setText(sdf.format(new Date()));
+            editStartDate.setText(SDF.format(new Date()));
+            editEndDate.setText(SDF.format(new Date()));
         }
         else {
             editStartDate.setText(startDate);
             editEndDate.setText(endDate);
         }
 
-        // Set list of assessments
+        // Set list of assessments in recycler view
         repository = new Repository(getApplication());
-        recyclerView = findViewById(R.id.course_assessmentRecyclerView);
+        RecyclerView recyclerView = findViewById(R.id.course_assessmentRecyclerView);
         assessmentAdapter = new AssessmentAdapter(this);
         recyclerView.setAdapter(assessmentAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -140,7 +124,7 @@ public class CourseDetails extends AppCompatActivity {
         assessmentAdapter.setAssessments(filteredAssessments);
 
         // Set spinner contents
-        statusSpinner = findViewById(R.id.courseStatusSpinner);
+        Spinner statusSpinner = findViewById(R.id.courseStatusSpinner);
         ArrayAdapter<CharSequence> courseArrayAdapter = ArrayAdapter.createFromResource(this, R.array.course_status, android.R.layout.simple_spinner_item);
         courseArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusSpinner.setAdapter(courseArrayAdapter);
@@ -208,10 +192,10 @@ public class CourseDetails extends AppCompatActivity {
         saveButton.setOnClickListener(v -> {
 
             // Check dates
-            if (CALENDAR_START.after(CALENDAR_END)) {
-                Toast.makeText(CourseDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
-            }
-            else {  // Dates ok
+//            if (CALENDAR_START.after(CALENDAR_END)) {
+//                Toast.makeText(CourseDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
+//            }
+//            else {  // Dates ok
                 Course course;
 
                 // Set default title if left blank
@@ -251,13 +235,12 @@ public class CourseDetails extends AppCompatActivity {
                     );
                     repository.update(course);
                 }
-
                 finish();
-            }
+//            }
         });
 
         // Hides fab and Assessments views if creating new course
-        fab = findViewById(R.id.courseDetailsFab);
+        FloatingActionButton fab       = findViewById(R.id.courseDetailsFab);
         LinearLayout assessmentsLayout = findViewById(R.id.courseDetailsAssessmentsLayout);
         if (courseId == -1) {
             fab.setVisibility(View.GONE);
@@ -274,7 +257,7 @@ public class CourseDetails extends AppCompatActivity {
         // Display calendar when clicking on start date text view
         editStartDate.setOnClickListener(v -> {
             try {
-                CALENDAR_START.setTime(Objects.requireNonNull(sdf.parse(editStartDate.getText().toString())));
+                CALENDAR_START.setTime(Objects.requireNonNull(SDF.parse(editStartDate.getText().toString())));
             }
             catch (ParseException e) {
                 e.printStackTrace();
@@ -295,13 +278,13 @@ public class CourseDetails extends AppCompatActivity {
             CALENDAR_START.set(Calendar.MONTH, month);
             CALENDAR_START.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            updateLabel(editStartDate, CALENDAR_START);
+            editStartDate.setText(SDF.format(CALENDAR_START.getTime()));
         };
 
         // Display calendar when clicking on end date text view
         editEndDate.setOnClickListener(v -> {
             try {
-                CALENDAR_END.setTime(Objects.requireNonNull(sdf.parse(editEndDate.getText().toString())));
+                CALENDAR_END.setTime(Objects.requireNonNull(SDF.parse(editEndDate.getText().toString())));
             }
             catch (ParseException e) {
                 e.printStackTrace();
@@ -322,7 +305,7 @@ public class CourseDetails extends AppCompatActivity {
             CALENDAR_END.set(Calendar.MONTH, month);
             CALENDAR_END.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            updateLabel(editEndDate, CALENDAR_END);
+            editEndDate.setText(SDF.format(CALENDAR_END.getTime()));
         };
     }
 
@@ -339,16 +322,6 @@ public class CourseDetails extends AppCompatActivity {
         assessmentAdapter.setAssessments(filteredAssessments);
     }
 
-    private void updateLabel(EditText editText, Calendar calendar) {
-        String dateFormat;
-        SimpleDateFormat sdf;
-
-        dateFormat = "MM/dd/yy";
-        sdf = new SimpleDateFormat(dateFormat, Locale.US);
-
-        editText.setText(sdf.format(calendar.getTime()));
-    }
-
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.course_details_menu, menu);
         return true;
@@ -356,22 +329,21 @@ public class CourseDetails extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         String dateFromScreen;
-        String dateFormat;
-        SimpleDateFormat sdf;
         Date date;
         long trigger;
-        Intent intent;
         PendingIntent pendingIntent;
         AlarmManager alarmManager;
 
-        if (courseId == -1) {
-            Toast.makeText(CourseDetails.this, "Course does not exist. Please save first.", Toast.LENGTH_LONG).show();
-            // FIXME: triggers when back arrow is selected, want to trigger only when menu option is selected
-        }
-        else {
-            int itemId = item.getItemId();
+        // FIXME: Extract courseId check if possible
 
-            if (itemId == R.id.shareCourseDetails) {
+        int itemId = item.getItemId();
+
+        // Share Course Details option
+        if (itemId == R.id.shareCourseDetails) {
+            if (courseId == -1) {
+                Toast.makeText(CourseDetails.this, "Course does not exist. Please save first.", Toast.LENGTH_LONG).show();
+            }
+            else {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT, editNote.getText().toString());
@@ -382,15 +354,17 @@ public class CourseDetails extends AppCompatActivity {
                 startActivity(shareIntent);
 
                 return true;
-
-            } else if (itemId == R.id.courseNotifyStart) {
+            }
+        } else if (itemId == R.id.courseNotifyStart) {  // Notify Start option
+            if (courseId == -1) {
+                Toast.makeText(CourseDetails.this, "Course does not exist. Please save first.", Toast.LENGTH_LONG).show();
+            }
+            else {
                 dateFromScreen = editStartDate.getText().toString();
-                dateFormat = "MM/dd/yy";
-                sdf = new SimpleDateFormat(dateFormat, Locale.US);
                 date = null;
 
                 try {
-                    date = sdf.parse(dateFromScreen);
+                    date = SDF.parse(dateFromScreen);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -398,26 +372,28 @@ public class CourseDetails extends AppCompatActivity {
                 assert date != null;
                 trigger = date.getTime();
 
-                intent = new Intent(CourseDetails.this, MyReceiver.class);
-                intent.putExtra("msg", "Course " + editTitle.getText().toString() + " starting.");
+                Intent notifyStartIntent = new Intent(CourseDetails.this, MyReceiver.class);
+                notifyStartIntent.putExtra("msg", "Course " + editTitle.getText().toString() + " starting.");
                 pendingIntent = PendingIntent.getBroadcast(
                         CourseDetails.this,
                         ++MainActivity.alertNumber,
-                        intent,
+                        notifyStartIntent,
                         PendingIntent.FLAG_IMMUTABLE);
                 alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
 
                 return true;
-
-            } else if (itemId == R.id.courseNotifyEnd) {
+            }
+        } else if (itemId == R.id.courseNotifyEnd) {    // Notify End option
+            if (courseId == -1) {
+                Toast.makeText(CourseDetails.this, "Course does not exist. Please save first.", Toast.LENGTH_LONG).show();
+            }
+            else {
                 dateFromScreen = editEndDate.getText().toString();
-                dateFormat = "MM/dd/yy";
-                sdf = new SimpleDateFormat(dateFormat, Locale.US);
                 date = null;
 
                 try {
-                    date = sdf.parse(dateFromScreen);
+                    date = SDF.parse(dateFromScreen);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -425,12 +401,12 @@ public class CourseDetails extends AppCompatActivity {
                 assert date != null;
                 trigger = date.getTime();
 
-                intent = new Intent(CourseDetails.this, MyReceiver.class);
-                intent.putExtra("msg", "Course " + editTitle.getText().toString() + " ending.");
+                Intent notifyEndIntent = new Intent(CourseDetails.this, MyReceiver.class);
+                notifyEndIntent.putExtra("msg", "Course " + editTitle.getText().toString() + " ending.");
                 pendingIntent = PendingIntent.getBroadcast(
                         CourseDetails.this,
                         ++MainActivity.alertNumber,
-                        intent,
+                        notifyEndIntent,
                         PendingIntent.FLAG_IMMUTABLE);
                 alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);

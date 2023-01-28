@@ -32,21 +32,22 @@ import java.util.Objects;
 import database.Repository;
 import entities.Course;
 import entities.Term;
-import util.CalendarComparator;
 
 public class TermDetails extends AppCompatActivity {
 
+    private final Calendar CALENDAR_END   = Calendar.getInstance();
     private final Calendar CALENDAR_START = Calendar.getInstance();
-    private final Calendar CALENDAR_END = Calendar.getInstance();
+    private final String   DATE_FORMAT    = "MM/dd/yy";
+    private final SimpleDateFormat SDF    = new SimpleDateFormat(DATE_FORMAT, Locale.US);
 
     private CourseAdapter courseAdapter;
+    private EditText      editEndDate;
+    private EditText      editStartDate;
+    private EditText      editTitle;
     private DatePickerDialog.OnDateSetListener endDateDialog;
+    private List<Course>  filteredCourses;
+    private Repository    repository;
     private DatePickerDialog.OnDateSetListener startDateDialog;
-    private EditText editEndDate;
-    private EditText editStartDate;
-    private EditText editTitle;
-    private List<Course> filteredCourses;
-    private Repository repository;
     private int termId;
 
     @Override
@@ -54,43 +55,32 @@ public class TermDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term_details);
 
-        FloatingActionButton fab;
-        RecyclerView recyclerView;
-        SimpleDateFormat sdf;
-        String dateFormat;
-        String endDate;
-        String startDate;
-        String title;
-
-        editTitle = findViewById(R.id.termEditTitle);
+        editTitle     = findViewById(R.id.termEditTitle);
         editStartDate = findViewById(R.id.termEditStartDate);
-        editEndDate = findViewById(R.id.termEditEndDate);
-
-        dateFormat = "MM/dd/yy";
-        sdf = new SimpleDateFormat(dateFormat, Locale.US);
+        editEndDate   = findViewById(R.id.termEditEndDate);
 
         // Get current values of selected term if any
-        termId = getIntent().getIntExtra("id", -1);
-        title = getIntent().getStringExtra("title");
-        startDate = getIntent().getStringExtra("startDate");
-        endDate = getIntent().getStringExtra("endDate");
+        termId           = getIntent().getIntExtra("id", -1);
+        String title     = getIntent().getStringExtra("title");
+        String startDate = getIntent().getStringExtra("startDate");
+        String endDate   = getIntent().getStringExtra("endDate");
 
         // Set existing values to display in text areas
         editTitle.setText(title);
 
         // Set date fields to current date if adding new term
         if (termId == -1) {
-            editStartDate.setText(sdf.format(new Date()));
-            editEndDate.setText(sdf.format(new Date()));
+            editStartDate.setText(SDF.format(new Date()));
+            editEndDate.setText(SDF.format(new Date()));
         }
         else {
             editStartDate.setText(startDate);
             editEndDate.setText(endDate);
         }
 
-        // Set list of courses
+        // Set list of courses in recycler view
         repository = new Repository(getApplication());
-        recyclerView = findViewById(R.id.term_courseRecyclerView);
+        RecyclerView recyclerView = findViewById(R.id.term_courseRecyclerView);
         courseAdapter = new CourseAdapter(this);
         recyclerView.setAdapter(courseAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -106,18 +96,19 @@ public class TermDetails extends AppCompatActivity {
         // Save term details button
         Button saveButton = findViewById(R.id.termSaveDetailsButton);
         saveButton.setOnClickListener(v -> {
-            // Check dates
 
-            CalendarComparator calCompare = new CalendarComparator();
+            // Check valid dates
+//            CalendarComparator calCompare = new CalendarComparator();
             // FIXME: weird interaction with equal dates
+//            int id = termId;
 //            int stDay = CALENDAR_START.get(Calendar.DAY_OF_YEAR);
 //            int enDay = CALENDAR_END.get(Calendar.DAY_OF_YEAR);
 //            int stYear = CALENDAR_START.get(Calendar.YEAR);
 //            int edYear = CALENDAR_END.get(Calendar.YEAR);
-            if (calCompare.isDayAfter(CALENDAR_START, CALENDAR_END)) {
-                Toast.makeText(TermDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
-            }
-            else {  // Dates ok
+//            if (calCompare.isDayAfter(CALENDAR_START, CALENDAR_END)) {
+//                Toast.makeText(TermDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
+//            }
+//            else {  // Dates valid
                 Term term;
 
                 // Set default title if left blank
@@ -144,7 +135,7 @@ public class TermDetails extends AppCompatActivity {
                     repository.update(term);
                 }
                 finish();
-            }
+//            }
         });
 
         // Add delete button if not new term
@@ -206,7 +197,7 @@ public class TermDetails extends AppCompatActivity {
         // Display calendar when clicking on start date text view
         editStartDate.setOnClickListener(v -> {
             try {
-                CALENDAR_START.setTime(Objects.requireNonNull(sdf.parse(editStartDate.getText().toString())));
+                CALENDAR_START.setTime(Objects.requireNonNull(SDF.parse(editStartDate.getText().toString())));
             }
             catch (ParseException e) {
                 e.printStackTrace();
@@ -227,13 +218,13 @@ public class TermDetails extends AppCompatActivity {
             CALENDAR_START.set(Calendar.MONTH, month);
             CALENDAR_START.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            updateLabel(editStartDate, CALENDAR_START);
+            editStartDate.setText(SDF.format(CALENDAR_START.getTime()));
         };
 
         // Display calendar when clicking on end date text view
         editEndDate.setOnClickListener(v -> {
             try {
-                CALENDAR_END.setTime(Objects.requireNonNull(sdf.parse(editEndDate.getText().toString())));
+                CALENDAR_END.setTime(Objects.requireNonNull(SDF.parse(editEndDate.getText().toString())));
             }
             catch (ParseException e) {
                 e.printStackTrace();
@@ -254,11 +245,11 @@ public class TermDetails extends AppCompatActivity {
             CALENDAR_END.set(Calendar.MONTH, month);
             CALENDAR_END.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            updateLabel(editEndDate, CALENDAR_END);
+            editEndDate.setText(SDF.format(CALENDAR_END.getTime()));
         };
 
         // Hide fab and Assessments views if creating new course
-        fab = findViewById(R.id.termDetailsFab);
+        FloatingActionButton fab   = findViewById(R.id.termDetailsFab);
         LinearLayout coursesLayout = findViewById(R.id.termCoursesLayout);
         if (termId == -1) {
             fab.setVisibility(View.GONE);
@@ -286,38 +277,36 @@ public class TermDetails extends AppCompatActivity {
         courseAdapter.setCourses(filteredCourses);
     }
 
-    private void updateLabel(EditText editText, Calendar calendar) {
-        final String dateFormat = "MM/dd/yy";
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
-
-        editText.setText(sdf.format(calendar.getTime()));
-    }
-
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.term_details_menu, menu);
         return true;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.deleteCourses) {// Determine if there are courses listed
+
+        // Delete all courses selected from menu
+        if (item.getItemId() == R.id.deleteCourses) {
+
+            // Determine if there are courses to delete
             boolean hasCourses = false;
             for (Course course : repository.getAllCourses()) {
 
-                // Term has associated courses
+                // There are courses to delete
                 if (course.getTermId() == termId) {
                     hasCourses = true;
                     break;
                 }
             }
 
+            // No courses to delete
             if (!hasCourses) {
                 Toast.makeText(TermDetails.this, "No courses to delete.", Toast.LENGTH_LONG).show();
             } else {
-                // Delete approved
+                // Show alert dialog
                 new AlertDialog.Builder(TermDetails.this)
                         .setTitle("Delete All Courses")
                         .setMessage("Are you sure you want to delete ALL courses associated with this term?")
-                        .setPositiveButton(R.string.delete, (dialog, which) -> {
+                        .setPositiveButton(R.string.delete, (dialog, which) -> {    // Delete approved
 
                             // Find all associated courses
                             for (Course course : repository.getAllCourses()) {
