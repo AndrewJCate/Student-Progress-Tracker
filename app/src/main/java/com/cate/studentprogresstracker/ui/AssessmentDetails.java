@@ -125,45 +125,42 @@ public class AssessmentDetails extends AppCompatActivity {
 
         // Save button clicked
         Button saveButton = findViewById(R.id.assessmentSaveDetailsButton);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Check dates
-                if (CALENDAR_START.after(CALENDAR_END)) {
-                    Toast.makeText(AssessmentDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
-                }
-                else {  // Dates ok
-                    Assessment assessment;
+        saveButton.setOnClickListener(v -> {
+            // Check dates
+            if (CALENDAR_START.after(CALENDAR_END)) {
+                Toast.makeText(AssessmentDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
+            }
+            else {  // Dates ok
+                Assessment assessment;
 
-                    // Set default title if left blank
-                    if (editTitle.getText().toString().trim().equals("")) {
-                        editTitle.setText(R.string.blank);
-                    }
-
-                    // Create new Assessment
-                    if (assessmentId == -1) {
-                        assessment = new Assessment(
-                                0,
-                                editTitle.getText().toString(),
-                                editType,
-                                editStartDate.getText().toString(),
-                                editEndDate.getText().toString(),
-                                courseId
-                        );
-                        repository.insert(assessment);
-                    } else {  // Update existing Assessment object data
-                        assessment = new Assessment(
-                                assessmentId,
-                                editTitle.getText().toString(),
-                                editType,
-                                editStartDate.getText().toString(),
-                                editEndDate.getText().toString(),
-                                courseId
-                        );
-                        repository.update(assessment);
-                    }
-                    finish();
+                // Set default title if left blank
+                if (editTitle.getText().toString().trim().equals("")) {
+                    editTitle.setText(R.string.blank);
                 }
+
+                // Create new Assessment
+                if (assessmentId == -1) {
+                    assessment = new Assessment(
+                            0,
+                            editTitle.getText().toString(),
+                            editType,
+                            editStartDate.getText().toString(),
+                            editEndDate.getText().toString(),
+                            courseId
+                    );
+                    repository.insert(assessment);
+                } else {  // Update existing Assessment object data
+                    assessment = new Assessment(
+                            assessmentId,
+                            editTitle.getText().toString(),
+                            editType,
+                            editStartDate.getText().toString(),
+                            editEndDate.getText().toString(),
+                            courseId
+                    );
+                    repository.update(assessment);
+                }
+                finish();
             }
         });
 
@@ -176,103 +173,85 @@ public class AssessmentDetails extends AppCompatActivity {
             layout.addView(deleteButton);
 
             // Delete button clicked
-            deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Delete confirmation dialog
-                    new AlertDialog.Builder(AssessmentDetails.this)
-                            .setTitle("Delete Assessment")
-                            .setMessage("Are you sure you want to delete this assessment?")
-                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // Delete approved
-                                    boolean isDeleted = false;
+            deleteButton.setOnClickListener(v -> {
+                // Delete confirmation dialog
+                new AlertDialog.Builder(AssessmentDetails.this)
+                        .setTitle("Delete Assessment")
+                        .setMessage("Are you sure you want to delete this assessment?")
+                        .setPositiveButton(R.string.delete, (dialog, which) -> {
+                            // Delete approved
+                            boolean isDeleted = false;
 
-                                    for (Assessment assessment : repository.getAllAssessments()) {
-                                        if (assessment.getAssessmentId() == assessmentId) {
-                                            repository.delete(assessment);
-                                            isDeleted = true;
-                                            Toast.makeText(AssessmentDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
-                                            finish();
-                                        }
-                                    }
-                                    // Not deleted
-                                    if (!isDeleted) {
-                                        Toast.makeText(AssessmentDetails.this, "Assessment not found.", Toast.LENGTH_LONG).show();
-                                    }
+                            for (Assessment assessment : repository.getAllAssessments()) {
+                                if (assessment.getAssessmentId() == assessmentId) {
+                                    repository.delete(assessment);
+                                    isDeleted = true;
+                                    Toast.makeText(AssessmentDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
+                                    finish();
                                 }
-                            })
-                            .setNegativeButton(R.string.cancel, null)
-                            .show();
-                }
+                            }
+                            // Not deleted
+                            if (!isDeleted) {
+                                Toast.makeText(AssessmentDetails.this, "Assessment not found.", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
             });
         }
 
         // Display calendar when clicking on start date text view
-        editStartDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    CALENDAR_START.setTime(Objects.requireNonNull(sdf.parse(editStartDate.getText().toString())));
-                }
-                catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                new DatePickerDialog(
-                        AssessmentDetails.this,
-                        startDateDialog,
-                        CALENDAR_START.get(Calendar.YEAR),
-                        CALENDAR_START.get(Calendar.MONTH),
-                        CALENDAR_START.get(Calendar.DAY_OF_MONTH))
-                        .show();
+        editStartDate.setOnClickListener(v -> {
+            try {
+                CALENDAR_START.setTime(Objects.requireNonNull(sdf.parse(editStartDate.getText().toString())));
             }
+            catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            new DatePickerDialog(
+                    AssessmentDetails.this,
+                    startDateDialog,
+                    CALENDAR_START.get(Calendar.YEAR),
+                    CALENDAR_START.get(Calendar.MONTH),
+                    CALENDAR_START.get(Calendar.DAY_OF_MONTH))
+                    .show();
         });
 
         // Saves selected start date info from calendar
-        startDateDialog = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                CALENDAR_START.set(Calendar.YEAR, year);
-                CALENDAR_START.set(Calendar.MONTH, month);
-                CALENDAR_START.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        startDateDialog = (view, year, month, dayOfMonth) -> {
+            CALENDAR_START.set(Calendar.YEAR, year);
+            CALENDAR_START.set(Calendar.MONTH, month);
+            CALENDAR_START.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                updateLabel(editStartDate, CALENDAR_START);
-            }
+            updateLabel(editStartDate, CALENDAR_START);
         };
 
         // Display calendar when clicking on end date text view
-        editEndDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    CALENDAR_END.setTime(Objects.requireNonNull(sdf.parse(editEndDate.getText().toString())));
-                }
-                catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                new DatePickerDialog(
-                        AssessmentDetails.this,
-                        endDateDialog,
-                        CALENDAR_END.get(Calendar.YEAR),
-                        CALENDAR_END.get(Calendar.MONTH),
-                        CALENDAR_END.get(Calendar.DAY_OF_MONTH))
-                        .show();
+        editEndDate.setOnClickListener(v -> {
+            try {
+                CALENDAR_END.setTime(Objects.requireNonNull(sdf.parse(editEndDate.getText().toString())));
             }
+            catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            new DatePickerDialog(
+                    AssessmentDetails.this,
+                    endDateDialog,
+                    CALENDAR_END.get(Calendar.YEAR),
+                    CALENDAR_END.get(Calendar.MONTH),
+                    CALENDAR_END.get(Calendar.DAY_OF_MONTH))
+                    .show();
         });
 
         // Saves selected end date info from calendar
-        endDateDialog = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                CALENDAR_END.set(Calendar.YEAR, year);
-                CALENDAR_END.set(Calendar.MONTH, month);
-                CALENDAR_END.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        endDateDialog = (view, year, month, dayOfMonth) -> {
+            CALENDAR_END.set(Calendar.YEAR, year);
+            CALENDAR_END.set(Calendar.MONTH, month);
+            CALENDAR_END.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                updateLabel(editEndDate, CALENDAR_END);
-            }
+            updateLabel(editEndDate, CALENDAR_END);
         };
     }
 

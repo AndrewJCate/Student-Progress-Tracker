@@ -4,19 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -35,37 +30,37 @@ import java.util.Locale;
 import java.util.Objects;
 
 import database.Repository;
-import entities.Assessment;
 import entities.Course;
 import entities.Term;
+import util.CalendarComparator;
 
 public class TermDetails extends AppCompatActivity {
 
     private final Calendar CALENDAR_START = Calendar.getInstance();
     private final Calendar CALENDAR_END = Calendar.getInstance();
 
+    private CourseAdapter courseAdapter;
+    private DatePickerDialog.OnDateSetListener endDateDialog;
+    private DatePickerDialog.OnDateSetListener startDateDialog;
     private EditText editEndDate;
     private EditText editStartDate;
     private EditText editTitle;
-    private int termId;
-    private Repository repository;
-    private DatePickerDialog.OnDateSetListener startDateDialog;
-    private DatePickerDialog.OnDateSetListener endDateDialog;
-    private CourseAdapter courseAdapter;
     private List<Course> filteredCourses;
+    private Repository repository;
+    private int termId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term_details);
 
-        String endDate;
+        FloatingActionButton fab;
         RecyclerView recyclerView;
+        SimpleDateFormat sdf;
+        String dateFormat;
+        String endDate;
         String startDate;
         String title;
-        FloatingActionButton fab;
-        String dateFormat;
-        SimpleDateFormat sdf;
 
         editTitle = findViewById(R.id.termEditTitle);
         editStartDate = findViewById(R.id.termEditStartDate);
@@ -110,57 +105,58 @@ public class TermDetails extends AppCompatActivity {
 
         // Save term details button
         Button saveButton = findViewById(R.id.termSaveDetailsButton);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Check dates
-                if (CALENDAR_START.after(CALENDAR_END)) {
-                    Toast.makeText(TermDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
-                    // FIXME: weird interaction with equal dates
+        saveButton.setOnClickListener(v -> {
+            // Check dates
+
+            CalendarComparator calCompare = new CalendarComparator();
+            // FIXME: weird interaction with equal dates
+//            int stDay = CALENDAR_START.get(Calendar.DAY_OF_YEAR);
+//            int enDay = CALENDAR_END.get(Calendar.DAY_OF_YEAR);
+//            int stYear = CALENDAR_START.get(Calendar.YEAR);
+//            int edYear = CALENDAR_END.get(Calendar.YEAR);
+            if (calCompare.isDayAfter(CALENDAR_START, CALENDAR_END)) {
+                Toast.makeText(TermDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
+            }
+            else {  // Dates ok
+                Term term;
+
+                // Set default title if left blank
+                if (editTitle.getText().toString().equals("")) {
+                    editTitle.setText(R.string.blank);
                 }
-                else {  // Dates ok
-                    Term term;
 
-                    // Set default title if left blank
-                    if (editTitle.getText().toString().equals("")) {
-                        editTitle.setText(R.string.blank);
-                    }
-
-                    // Create new Term object
-                    if (termId == -1) {
-                        term = new Term(
-                                0,
-                                editTitle.getText().toString(),
-                                editStartDate.getText().toString(),
-                                editEndDate.getText().toString()
-                        );
-                        repository.insert(term);
-                    } else {  // Update existing Term object data
-                        term = new Term(
-                                termId,
-                                editTitle.getText().toString(),
-                                editStartDate.getText().toString(),
-                                editEndDate.getText().toString()
-                        );
-                        repository.update(term);
-                    }
-
-                    finish();
+                // Create new Term object
+                if (termId == -1) {
+                    term = new Term(
+                            0,
+                            editTitle.getText().toString(),
+                            editStartDate.getText().toString(),
+                            editEndDate.getText().toString()
+                    );
+                    repository.insert(term);
+                } else {  // Update existing Term object data
+                    term = new Term(
+                            termId,
+                            editTitle.getText().toString(),
+                            editStartDate.getText().toString(),
+                            editEndDate.getText().toString()
+                    );
+                    repository.update(term);
                 }
+                finish();
             }
         });
 
-        // Add delete button
-        LinearLayout deleteButtonLayout = findViewById(R.id.termDeleteButtonLayout);
-        Button deleteButton = new MaterialButton(this);
-        deleteButton.setText(R.string.delete);
-        deleteButton.setBackgroundColor(getResources().getColor(R.color.dark_red, this.getTheme()));
-        deleteButtonLayout.addView(deleteButton);
+        // Add delete button if not new term
+        if (termId != -1) {
+            LinearLayout deleteButtonLayout = findViewById(R.id.termDeleteButtonLayout);
+            Button deleteButton = new MaterialButton(this);
+            deleteButton.setText(R.string.delete);
+            deleteButton.setBackgroundColor(getResources().getColor(R.color.dark_red, this.getTheme()));
+            deleteButtonLayout.addView(deleteButton);
 
-        // Delete button clicked
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            // Delete button clicked
+            deleteButton.setOnClickListener(v -> {
                 Term currentTerm = null;
                 boolean courseFound = false;
 
@@ -188,14 +184,11 @@ public class TermDetails extends AppCompatActivity {
                             new AlertDialog.Builder(TermDetails.this)
                                     .setTitle("Delete Term")
                                     .setMessage("Are you sure you want to delete this term?")
-                                    .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // Delete approved
-                                            repository.delete(finalCurrentTerm);
-                                            Toast.makeText(TermDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
-                                            finish();
-                                        }
+                                    .setPositiveButton(R.string.delete, (dialog, which) -> {
+                                        // Delete approved
+                                        repository.delete(finalCurrentTerm);
+                                        Toast.makeText(TermDetails.this, title + " deleted.", Toast.LENGTH_LONG).show();
+                                        finish();
                                     })
                                     .setNegativeButton(R.string.cancel, null)
                                     .show();
@@ -207,91 +200,75 @@ public class TermDetails extends AppCompatActivity {
                 if (currentTerm == null) {
                     Toast.makeText(TermDetails.this, "Term not found.", Toast.LENGTH_LONG).show();
                 }
-            }
-        });
+            });
+        }
 
         // Display calendar when clicking on start date text view
-        editStartDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    CALENDAR_START.setTime(Objects.requireNonNull(sdf.parse(editStartDate.getText().toString())));
-                }
-                catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                new DatePickerDialog(
-                        TermDetails.this,
-                        startDateDialog,
-                        CALENDAR_START.get(Calendar.YEAR),
-                        CALENDAR_START.get(Calendar.MONTH),
-                        CALENDAR_START.get(Calendar.DAY_OF_MONTH))
-                        .show();
+        editStartDate.setOnClickListener(v -> {
+            try {
+                CALENDAR_START.setTime(Objects.requireNonNull(sdf.parse(editStartDate.getText().toString())));
             }
+            catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            new DatePickerDialog(
+                    TermDetails.this,
+                    startDateDialog,
+                    CALENDAR_START.get(Calendar.YEAR),
+                    CALENDAR_START.get(Calendar.MONTH),
+                    CALENDAR_START.get(Calendar.DAY_OF_MONTH))
+                    .show();
         });
 
         // Saves selected start date info from calendar
-        startDateDialog = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                CALENDAR_START.set(Calendar.YEAR, year);
-                CALENDAR_START.set(Calendar.MONTH, month);
-                CALENDAR_START.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        startDateDialog = (view, year, month, dayOfMonth) -> {
+            CALENDAR_START.set(Calendar.YEAR, year);
+            CALENDAR_START.set(Calendar.MONTH, month);
+            CALENDAR_START.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                updateLabel(editStartDate, CALENDAR_START);
-            }
+            updateLabel(editStartDate, CALENDAR_START);
         };
 
         // Display calendar when clicking on end date text view
-        editEndDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    CALENDAR_END.setTime(Objects.requireNonNull(sdf.parse(editEndDate.getText().toString())));
-                }
-                catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                new DatePickerDialog(
-                        TermDetails.this,
-                        endDateDialog,
-                        CALENDAR_END.get(Calendar.YEAR),
-                        CALENDAR_END.get(Calendar.MONTH),
-                        CALENDAR_END.get(Calendar.DAY_OF_MONTH))
-                        .show();
+        editEndDate.setOnClickListener(v -> {
+            try {
+                CALENDAR_END.setTime(Objects.requireNonNull(sdf.parse(editEndDate.getText().toString())));
             }
+            catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            new DatePickerDialog(
+                    TermDetails.this,
+                    endDateDialog,
+                    CALENDAR_END.get(Calendar.YEAR),
+                    CALENDAR_END.get(Calendar.MONTH),
+                    CALENDAR_END.get(Calendar.DAY_OF_MONTH))
+                    .show();
         });
 
         // Saves selected end date info from calendar
-        endDateDialog = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                CALENDAR_END.set(Calendar.YEAR, year);
-                CALENDAR_END.set(Calendar.MONTH, month);
-                CALENDAR_END.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        endDateDialog = (view, year, month, dayOfMonth) -> {
+            CALENDAR_END.set(Calendar.YEAR, year);
+            CALENDAR_END.set(Calendar.MONTH, month);
+            CALENDAR_END.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                updateLabel(editEndDate, CALENDAR_END);
-            }
+            updateLabel(editEndDate, CALENDAR_END);
         };
 
+        // Hide fab and Assessments views if creating new course
         fab = findViewById(R.id.termDetailsFab);
         LinearLayout coursesLayout = findViewById(R.id.termCoursesLayout);
-        // Hides fab and Assessments views if creating new course
         if (termId == -1) {
             fab.setVisibility(View.GONE);
             coursesLayout.setVisibility(View.GONE);
-            deleteButtonLayout.setVisibility(View.INVISIBLE);
         }
         else {  // Set click listener for fab if visible
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(TermDetails.this, CourseDetails.class);
-                    intent.putExtra("termId", termId);
-                    startActivity(intent);
-                }
+            fab.setOnClickListener(v -> {
+                Intent intent = new Intent(TermDetails.this, CourseDetails.class);
+                intent.putExtra("termId", termId);
+                startActivity(intent);
             });
         }
     }
@@ -310,11 +287,8 @@ public class TermDetails extends AppCompatActivity {
     }
 
     private void updateLabel(EditText editText, Calendar calendar) {
-        String dateFormat;
-        SimpleDateFormat sdf;
-
-        dateFormat = "MM/dd/yy";
-        sdf = new SimpleDateFormat(dateFormat, Locale.US);
+        final String dateFormat = "MM/dd/yy";
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
 
         editText.setText(sdf.format(calendar.getTime()));
     }
@@ -325,49 +299,41 @@ public class TermDetails extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.deleteCourses:
+        if (item.getItemId() == R.id.deleteCourses) {// Determine if there are courses listed
+            boolean hasCourses = false;
+            for (Course course : repository.getAllCourses()) {
 
-                // Determine if there are courses listed
-                boolean hasCourses = false;
-                for (Course course : repository.getAllCourses()) {
-
-                    // Term has associated courses
-                    if (course.getTermId() == termId) {
-                        hasCourses = true;
-                        break;
-                    }
+                // Term has associated courses
+                if (course.getTermId() == termId) {
+                    hasCourses = true;
+                    break;
                 }
+            }
 
-                if (!hasCourses) {
-                    Toast.makeText(TermDetails.this, "No courses to delete.", Toast.LENGTH_LONG).show();
-                }
-                else {
-                    new AlertDialog.Builder(TermDetails.this)
-                            .setTitle("Delete All Courses")
-                            .setMessage("Are you sure you want to delete ALL courses associated with this term?")
-                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                                // Delete approved
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+            if (!hasCourses) {
+                Toast.makeText(TermDetails.this, "No courses to delete.", Toast.LENGTH_LONG).show();
+            } else {
+                // Delete approved
+                new AlertDialog.Builder(TermDetails.this)
+                        .setTitle("Delete All Courses")
+                        .setMessage("Are you sure you want to delete ALL courses associated with this term?")
+                        .setPositiveButton(R.string.delete, (dialog, which) -> {
 
-                                    // Find all associated courses
-                                    for (Course course : repository.getAllCourses()) {
+                            // Find all associated courses
+                            for (Course course : repository.getAllCourses()) {
 
-                                        // Term has associated courses
-                                        if (course.getTermId() == termId) {
-                                            repository.delete(course);
-                                        }
-                                    }
-
-                                    Toast.makeText(TermDetails.this, "All associated courses deleted.", Toast.LENGTH_LONG).show();
-                                    onResume();
+                                // Term has associated courses
+                                if (course.getTermId() == termId) {
+                                    repository.delete(course);
                                 }
-                            })
-                            .setNegativeButton(R.string.cancel, null)   // Delete not approved
-                            .show();
-                }
-                return true;
+                            }
+                            Toast.makeText(TermDetails.this, "All associated courses deleted.", Toast.LENGTH_LONG).show();
+                            onResume();
+                        })
+                        .setNegativeButton(R.string.cancel, null)   // Delete not approved
+                        .show();
+            }
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
