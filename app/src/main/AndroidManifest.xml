@@ -16,7 +16,7 @@
         tools:targetApi="32">
 
         <receiver
-            android:name=".ui.MyReceiver"
+            android:name="util.MyReceiver"
             android:enabled="true"
             android:exported="true"></receiver>
 

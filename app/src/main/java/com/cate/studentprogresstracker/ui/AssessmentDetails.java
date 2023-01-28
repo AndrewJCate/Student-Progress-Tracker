@@ -32,7 +32,9 @@ import java.util.Objects;
 
 import database.Repository;
 import entities.Assessment;
+import util.Broadcaster;
 import util.CalendarComparator;
+import util.MyReceiver;
 
 public class AssessmentDetails extends AppCompatActivity {
 
@@ -253,12 +255,9 @@ public class AssessmentDetails extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        String dateFromScreen;
+        Broadcaster broadcaster = new Broadcaster();
         Date date = null;
-        long trigger;
-        Intent intent;
-        PendingIntent pendingIntent;
-        AlarmManager alarmManager;
+        String dateFromScreen;
 
         if (item.getItemId() == R.id.assessmentNotifyStart) {
             dateFromScreen = editStartDate.getText().toString();
@@ -269,20 +268,12 @@ public class AssessmentDetails extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            assert date != null;
-            trigger = date.getTime();
+            if (date != null) {
+                String message = "Assessment " + editTitle.getText().toString() + " starting.";
+                broadcaster.createBroadcast(AssessmentDetails.this, MyReceiver.class, "msg", message, date.getTime());
 
-            intent = new Intent(AssessmentDetails.this, MyReceiver.class);
-            intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " starting.");
-            pendingIntent = PendingIntent.getBroadcast(
-                    AssessmentDetails.this,
-                    ++MainActivity.alertNumber,
-                    intent,
-                    PendingIntent.FLAG_IMMUTABLE);
-            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
-
-            Toast.makeText(AssessmentDetails.this, "Notification set.", Toast.LENGTH_LONG).show();
+                Toast.makeText(AssessmentDetails.this, "Notification set.", Toast.LENGTH_LONG).show();
+            }
 
             return true;
         }
@@ -295,20 +286,12 @@ public class AssessmentDetails extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            assert date != null;
-            trigger = date.getTime();
+            if (date != null) {
+                String message = "Assessment " + editTitle.getText().toString() + " ending.";
+                broadcaster.createBroadcast(AssessmentDetails.this, MyReceiver.class, "msg", message, date.getTime());
 
-            intent = new Intent(AssessmentDetails.this, MyReceiver.class);
-            intent.putExtra("msg", "Assessment " + editTitle.getText().toString() + " ending.");
-            pendingIntent = PendingIntent.getBroadcast(
-                    AssessmentDetails.this,
-                    ++MainActivity.alertNumber,
-                    intent,
-                    PendingIntent.FLAG_IMMUTABLE);
-            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
-
-            Toast.makeText(AssessmentDetails.this, "Notification set.", Toast.LENGTH_LONG).show();
+                Toast.makeText(AssessmentDetails.this, "Notification set.", Toast.LENGTH_LONG).show();
+            }
 
             return true;
         }

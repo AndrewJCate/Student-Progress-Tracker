@@ -1,4 +1,4 @@
-package com.cate.studentprogresstracker.ui;
+package util;
 
 import android.app.Notification;
 import android.app.NotificationChannel;

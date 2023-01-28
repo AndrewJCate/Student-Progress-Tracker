@@ -38,7 +38,9 @@ import java.util.Objects;
 import database.Repository;
 import entities.Assessment;
 import entities.Course;
+import util.Broadcaster;
 import util.CalendarComparator;
+import util.MyReceiver;
 
 public class CourseDetails extends AppCompatActivity {
 
@@ -333,11 +335,9 @@ public class CourseDetails extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        String dateFromScreen;
+        Broadcaster broadcaster = new Broadcaster();
         Date date;
-        long trigger;
-        PendingIntent pendingIntent;
-        AlarmManager alarmManager;
+        String dateFromScreen;
 
         int itemId = item.getItemId();
 
@@ -365,20 +365,11 @@ public class CourseDetails extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            assert date != null;
-            trigger = date.getTime();
-
-            Intent notifyStartIntent = new Intent(CourseDetails.this, MyReceiver.class);
-            notifyStartIntent.putExtra("msg", "Course " + editTitle.getText().toString() + " starting.");
-            pendingIntent = PendingIntent.getBroadcast(
-                    CourseDetails.this,
-                    ++MainActivity.alertNumber,
-                    notifyStartIntent,
-                    PendingIntent.FLAG_IMMUTABLE);
-            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
-
-            Toast.makeText(CourseDetails.this, "Notification set.", Toast.LENGTH_LONG).show();
+            if (date != null) {
+                String message = "Course " + editTitle.getText().toString() + " starting.";
+                broadcaster.createBroadcast(CourseDetails.this, MyReceiver.class, "msg", message, date.getTime());
+                Toast.makeText(CourseDetails.this, "Notification set.", Toast.LENGTH_LONG).show();
+            }
 
             return true;
 
@@ -393,20 +384,12 @@ public class CourseDetails extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            assert date != null;
-            trigger = date.getTime();
+            if (date != null) {
+                String message = "Course " + editTitle.getText().toString() + " ending.";
+                broadcaster.createBroadcast(CourseDetails.this, MyReceiver.class, "msg", message, date.getTime());
 
-            Intent notifyEndIntent = new Intent(CourseDetails.this, MyReceiver.class);
-            notifyEndIntent.putExtra("msg", "Course " + editTitle.getText().toString() + " ending.");
-            pendingIntent = PendingIntent.getBroadcast(
-                    CourseDetails.this,
-                    ++MainActivity.alertNumber,
-                    notifyEndIntent,
-                    PendingIntent.FLAG_IMMUTABLE);
-            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
-
-            Toast.makeText(CourseDetails.this, "Notification set.", Toast.LENGTH_LONG).show();
+                Toast.makeText(CourseDetails.this, "Notification set.", Toast.LENGTH_LONG).show();
+            }
 
             return true;
         }
