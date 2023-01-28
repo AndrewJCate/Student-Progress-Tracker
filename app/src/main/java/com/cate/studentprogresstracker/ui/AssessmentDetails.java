@@ -32,6 +32,7 @@ import java.util.Objects;
 
 import database.Repository;
 import entities.Assessment;
+import util.CalendarComparator;
 
 public class AssessmentDetails extends AppCompatActivity {
 
@@ -112,11 +113,13 @@ public class AssessmentDetails extends AppCompatActivity {
         // Save button clicked
         Button saveButton = findViewById(R.id.assessmentSaveDetailsButton);
         saveButton.setOnClickListener(v -> {
-            // Check dates
-//            if (CALENDAR_START.after(CALENDAR_END)) {
-//                Toast.makeText(AssessmentDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
-//            }
-//            else {  // Dates ok
+
+            // Check valid dates
+            CalendarComparator calCompare = new CalendarComparator();
+            if (calCompare.isDayAfter(editStartDate.getText().toString(), editEndDate.getText().toString())) {
+                Toast.makeText(AssessmentDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
+            }
+            else {  // Dates valid
                 Assessment assessment;
 
                 // Set default title if left blank
@@ -147,7 +150,7 @@ public class AssessmentDetails extends AppCompatActivity {
                     repository.update(assessment);
                 }
                 finish();
-//            }
+            }
         });
 
         // Add delete button if not creating new assessment

@@ -32,6 +32,7 @@ import java.util.Objects;
 import database.Repository;
 import entities.Course;
 import entities.Term;
+import util.CalendarComparator;
 
 public class TermDetails extends AppCompatActivity {
 
@@ -98,17 +99,11 @@ public class TermDetails extends AppCompatActivity {
         saveButton.setOnClickListener(v -> {
 
             // Check valid dates
-//            CalendarComparator calCompare = new CalendarComparator();
-            // FIXME: weird interaction with equal dates
-//            int id = termId;
-//            int stDay = CALENDAR_START.get(Calendar.DAY_OF_YEAR);
-//            int enDay = CALENDAR_END.get(Calendar.DAY_OF_YEAR);
-//            int stYear = CALENDAR_START.get(Calendar.YEAR);
-//            int edYear = CALENDAR_END.get(Calendar.YEAR);
-//            if (calCompare.isDayAfter(CALENDAR_START, CALENDAR_END)) {
-//                Toast.makeText(TermDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
-//            }
-//            else {  // Dates valid
+            CalendarComparator calCompare = new CalendarComparator();
+            if (calCompare.isDayAfter(editStartDate.getText().toString(), editEndDate.getText().toString())) {
+                Toast.makeText(TermDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
+            }
+            else {  // Dates valid
                 Term term;
 
                 // Set default title if left blank
@@ -135,7 +130,7 @@ public class TermDetails extends AppCompatActivity {
                     repository.update(term);
                 }
                 finish();
-//            }
+            }
         });
 
         // Add delete button if not new term

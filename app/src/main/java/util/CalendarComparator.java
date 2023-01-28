@@ -1,21 +1,31 @@
 package util;
 
-import java.util.Calendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class CalendarComparator {
-    public boolean isDayAfter(Calendar cal1, Calendar cal2) {
-        if (cal1 == null || cal2 == null) {
+    public boolean isDayAfter(String day1, String day2) {
+        Date date1 = null;
+        Date date2 = null;
+
+        if (day1.trim().equals("") || day2.trim().equals("")) {
             return false;
         }
 
-        int year1 = cal1.get(Calendar.YEAR);
-        int year2 = cal2.get(Calendar.YEAR);
-        int dayOfYear1 = cal1.get(Calendar.DAY_OF_YEAR);
-        int dayOfYear2 = cal2.get(Calendar.DAY_OF_YEAR);
-
-        if (year1 > year2) {
-            return true;
+        try {
+            date1 = new SimpleDateFormat("MM/dd/yy", Locale.US).parse(day1);
+            date2 = new SimpleDateFormat("MM/dd/yy", Locale.US).parse(day2);
         }
-        else return dayOfYear1 > dayOfYear2;
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (date1 == null || date2 == null) {
+            return false;
+        }
+
+        return date1.after(date2);
     }
 }

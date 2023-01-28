@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
@@ -47,8 +46,5 @@ public class MyReceiver extends BroadcastReceiver {
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(notificationId++, notification);
-
-        // FIXME: Toast only shows when notification is received. How display when notification is successfully created?
-        Toast.makeText(context, "Notification created successfully.",Toast.LENGTH_LONG).show();
     }
 }

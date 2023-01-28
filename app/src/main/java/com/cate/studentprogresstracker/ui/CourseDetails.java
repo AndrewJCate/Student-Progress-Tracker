@@ -38,6 +38,7 @@ import java.util.Objects;
 import database.Repository;
 import entities.Assessment;
 import entities.Course;
+import util.CalendarComparator;
 
 public class CourseDetails extends AppCompatActivity {
 
@@ -191,11 +192,12 @@ public class CourseDetails extends AppCompatActivity {
         Button saveButton = findViewById(R.id.courseSaveDetailsButton);
         saveButton.setOnClickListener(v -> {
 
-            // Check dates
-//            if (CALENDAR_START.after(CALENDAR_END)) {
-//                Toast.makeText(CourseDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
-//            }
-//            else {  // Dates ok
+            // Check valid dates
+            CalendarComparator calCompare = new CalendarComparator();
+            if (calCompare.isDayAfter(editStartDate.getText().toString(), editEndDate.getText().toString())) {
+                Toast.makeText(CourseDetails.this, "End date should be on or after start date.", Toast.LENGTH_LONG).show();
+            }
+            else {  // Dates valid
                 Course course;
 
                 // Set default title if left blank
@@ -236,7 +238,7 @@ public class CourseDetails extends AppCompatActivity {
                     repository.update(course);
                 }
                 finish();
-//            }
+            }
         });
 
         // Hides fab and Assessments views if creating new course
@@ -338,6 +340,8 @@ public class CourseDetails extends AppCompatActivity {
 
         int itemId = item.getItemId();
 
+//      TODO  android.R.id.home
+
         // Share Course Details option
         if (itemId == R.id.shareCourseDetails) {
             if (courseId == -1) {
@@ -381,6 +385,8 @@ public class CourseDetails extends AppCompatActivity {
                         PendingIntent.FLAG_IMMUTABLE);
                 alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, trigger, pendingIntent);
+
+                // TODO: Add toast
 
                 return true;
             }
