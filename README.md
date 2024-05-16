@@ -106,7 +106,7 @@ This app is mainly used to track dates of school milestones and events. You can 
 
 Reminder alerts can be set to let you know when an event has started and/or ended.
 
-<img src="/Documentation/Screenshots/Assessment Details Menu.png" alt="Event reminders">
+<img src="/Documentation/Screenshots/Assessment Details Menu resize.png" alt="Event reminders">
 
 You can keep notes course events and share those notes with others.
 
