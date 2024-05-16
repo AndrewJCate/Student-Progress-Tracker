@@ -203,7 +203,7 @@ public class CourseDetails extends AppCompatActivity {
                 Course course;
 
                 // Set default title if left blank
-                if (editTitle.getText().toString().equals("")) {
+                if (editTitle.getText().toString().isEmpty()) {
                     editTitle.setText(R.string.blank);
                 }
 

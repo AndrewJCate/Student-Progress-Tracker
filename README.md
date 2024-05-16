@@ -89,7 +89,7 @@ You need a way to run Android APK files. There are many different options:
 
 ### Installation
 
-1. Download the [APK](https://github.com/AndrewJCate/Student-Progress-Tracker/blob/master/app-release.apk) file to whatever device you will run it on.
+1. Download the [APK](/app/release/app-release.apk) file to whatever device you will run it on.
 2. Follow device/software specific instructions to install the APK. Instructions are easily found online.
 3. Run the program.
 
