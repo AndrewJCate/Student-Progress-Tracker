@@ -102,19 +102,19 @@ You need a way to run Android APK files. There are many different options:
 
 This app is mainly used to track dates of school milestones and events. You can track events in three categories: terms, courses, and assessments. 
 
-<img src="/Documentation/Screenshots/MainScreen.png" alt="Home screen">
+<img src="/Documentation/Screenshots/MainScreen.png" alt="Home screen" width="249" height="512">
 
 Reminder alerts can be set to let you know when an event has started and/or ended.
 
-<img src="/Documentation/Screenshots/Assessment Details Menu.png" alt="Event reminders">
+<img src="/Documentation/Screenshots/Assessment Details Menu.png" alt="Event reminders" width="249" height="512">
 
 You can keep notes course events and share those notes with others.
 
-<img src="/Documentation/Screenshots/Share Notes.png" alt="Sharing notes">
+<img src="/Documentation/Screenshots/Share Notes.png" alt="Sharing notes" width="249" height="512">
 
 You can load sample events from the home screen by selecting the menu button.
 
-<img src="/Documentation/Screenshots/Main Activity Menu.png" alt="Add sample data">
+<img src="/Documentation/Screenshots/Main Activity Menu.png" alt="Add sample data" width="249" height="512">
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
