@@ -152,8 +152,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Andrew Cate - [LinkedIn](https://www.linkedin.com/in/andrewjcate/) - [Website](https://www.andrewjcate.com)
 
-
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Project Link: [https://github.com/AndrewJCate/Student-Progress-Tracker](https://github.com/AndrewJCate/Student-Progress-Tracker)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
